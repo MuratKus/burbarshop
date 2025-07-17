@@ -16,7 +16,7 @@ export async function sendEmail(data: EmailData): Promise<boolean> {
     }
 
     // SendGrid integration
-    const sgMail = require('@sendgrid/mail')
+    const sgMail = await import('@sendgrid/mail')
     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     
     const msg = {

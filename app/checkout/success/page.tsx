@@ -117,7 +117,7 @@ function CheckoutSuccessContent() {
                   A detailed confirmation has been sent to <strong>{orderDetails?.email}</strong> with your order details and what to expect next.
                 </p>
                 <p className="text-xs text-blue-700">
-                  Don't see it? Check your spam folder or contact us for help.
+                  Don&apos;t see it? Check your spam folder or contact us for help.
                 </p>
               </div>
             </div>
@@ -127,7 +127,7 @@ function CheckoutSuccessContent() {
                 <h3 className="font-semibold text-gray-900 mb-2">🎨 What Happens Next?</h3>
                 <div className="space-y-2 text-sm text-gray-700">
                   <p>• Your beautiful art prints will be carefully prepared</p>
-                  <p>• We'll send you tracking information once shipped</p>
+                  <p>• We&apos;ll send you tracking information once shipped</p>
                   <p>• Expected delivery: 3-7 business days</p>
                 </div>
               </div>

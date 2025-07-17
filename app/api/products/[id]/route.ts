@@ -33,7 +33,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const data = await request.json()
     
     // Generate new slug if title changed
-    let updateData: any = {
+    const updateData: any = {
       title: data.title,
       description: data.description,
       images: data.images,

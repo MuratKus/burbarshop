@@ -381,7 +381,7 @@ export function FloatingElement({
   const elementRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
-    let startTime = Date.now()
+    const startTime = Date.now()
     
     const animate = () => {
       const elapsed = (Date.now() - startTime) / 1000

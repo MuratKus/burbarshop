@@ -49,7 +49,7 @@ export default function MagicLinkPage() {
               <div className="text-4xl mb-4">📧</div>
               <h1 className="text-2xl font-bold text-gray-900 mb-4">Check Your Email</h1>
               <p className="text-gray-600 mb-6">
-                We've sent a magic link to <strong>{email}</strong>. 
+                We&apos;ve sent a magic link to <strong>{email}</strong>. 
                 Click the link in your email to sign in instantly.
               </p>
               
@@ -95,7 +95,7 @@ export default function MagicLinkPage() {
               <div className="text-4xl mb-4">✨</div>
               <h1 className="text-2xl font-bold text-gray-900">Magic Link Sign In</h1>
               <p className="text-gray-600 mt-2">
-                Enter your email and we'll send you a secure sign-in link
+                Enter your email and we&apos;ll send you a secure sign-in link
               </p>
             </div>
 
@@ -119,7 +119,7 @@ export default function MagicLinkPage() {
                   placeholder="your@email.com"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  We'll create an account for you if you don't have one
+                  We&apos;ll create an account for you if you don&apos;t have one
                 </p>
               </div>
 

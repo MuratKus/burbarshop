@@ -126,7 +126,7 @@ export default function TrackOrderPage() {
               
               <div className="pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500">
-                  Don't have an account yet?{' '}
+                  Don&apos;t have an account yet?{' '}
                   <Link href="/auth/register" className="text-blue-600 hover:text-blue-800">
                     Create one
                   </Link>

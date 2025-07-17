@@ -38,7 +38,7 @@ export default function WishlistPage() {
   const fetchWishlist = async () => {
     try {
       const userData = localStorage.getItem('user')
-      let params = new URLSearchParams()
+      const params = new URLSearchParams()
 
       if (userData) {
         const user = JSON.parse(userData)
@@ -67,7 +67,7 @@ export default function WishlistPage() {
     setRemovingItem(productId)
     try {
       const userData = localStorage.getItem('user')
-      let params = new URLSearchParams()
+      const params = new URLSearchParams()
       params.append('productId', productId)
 
       if (userData) {

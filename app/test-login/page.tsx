@@ -67,8 +67,8 @@ export default function TestLoginPage() {
               <h3 className="font-medium text-blue-900 mb-2">How to Test:</h3>
               <ol className="text-sm text-blue-800 space-y-1">
                 <li>1. Make sure you have guest orders with email: {email}</li>
-                <li>2. Click "Login" above</li>
-                <li>3. You'll be redirected to "My Orders" page</li>
+                <li>2. Click &quot;Login&quot; above</li>
+                <li>3. You&apos;ll be redirected to &quot;My Orders&quot; page</li>
                 <li>4. Guest orders will be automatically linked to your account</li>
               </ol>
             </div>

@@ -27,7 +27,15 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "pre-push": "npm run lint && npm run test"
+    "pre-push": "npm run lint && npm run test",
+    "validate": "node scripts/validate-code.js",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
+    "format:fix": "prettier --write .",
+    "type-check": "tsc --noEmit",
+    "test:unit": "jest --testPathPattern='__tests__'",
+    "test:integration": "jest --testPathPattern='integration'",
+    "test:e2e": "playwright test",
+    "test:api": "jest --testPathPattern='api'"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.15.1",

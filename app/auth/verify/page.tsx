@@ -82,7 +82,7 @@ function VerifyMagicLinkContent() {
               <div className="text-4xl mb-4">✅</div>
               <h1 className="text-2xl font-bold text-gray-900 mb-4">Welcome to Burbarshop!</h1>
               <p className="text-gray-600 mb-6">
-                You've been successfully signed in. Redirecting to your dashboard...
+                You&apos;ve been successfully signed in. Redirecting to your dashboard...
               </p>
               
               <div className="bg-green-50 rounded-lg p-4 mb-6">
