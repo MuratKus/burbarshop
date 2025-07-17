@@ -6,7 +6,7 @@ import React from 'react'
 // Mock Next.js Image component
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: ({ src, alt, ...props }: any) => (
+  default: ({ src, alt, fill, ...props }: any) => (
     // eslint-disable-next-line @next/next/no-img-element
     <img src={src} alt={alt} {...props} />
   ),
@@ -117,7 +117,7 @@ describe('ProductCard', () => {
       quantity: 1
     })
     
-    expect(mockSuccess).toHaveBeenCalledWith('Added to cart!', 'Test Product (A4)')
+    expect(mockSuccess).toHaveBeenCalledWith('Added to cart!', 'Test Product (A4)', true)
   })
 
   test('applies custom className', () => {
