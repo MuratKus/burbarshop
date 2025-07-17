@@ -21,7 +21,7 @@
     "images:strategy": "node scripts/download-and-optimize-images.js --strategy-only",
     "input:manual": "node scripts/manual-data-input.js",
     "mcp:stripe": "node mcp-servers/stripe-server.js",
-    "mcp:orders": "node mcp-servers/order-management-server.js", 
+    "mcp:orders": "node mcp-servers/order-management-server.js",
     "mcp:database": "node mcp-servers/database-server.js",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -77,7 +77,6 @@
     "postcss": "^8.0.0",
     "prettier": "^3.0.0",
     "prisma": "^5.7.0",
-    "puppeteer": "^21.11.0",
     "tailwindcss": "^3.3.0",
     "tsx": "^4.20.3",
     "typescript": "^5.0.0"
