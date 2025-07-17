@@ -35,3 +35,11 @@ next-env.d.ts
 # Prisma
 prisma/dev.db
 prisma/dev.db-journal
+
+# Claude Code (development files)
+.claude/
+claude.md
+klaud.md
+
+# Scripts (development utilities)
+scripts/
