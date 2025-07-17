@@ -105,8 +105,9 @@ export default function EditProductPage({ params }: EditProductPageProps) {
       images: prev.images.filter((_, i) => i !== index)
     }))
     // Also remove from uploaded files if it's a new upload
-    if (index >= (JSON.parse(product?.images || '[]')).length) {
-      const newFileIndex = index - (JSON.parse(product?.images || '[]')).length
+    const existingImages = typeof product?.images === 'string' ? JSON.parse(product.images || '[]') : (product?.images || [])
+    if (index >= existingImages.length) {
+      const newFileIndex = index - existingImages.length
       setUploadedFiles(prev => prev.filter((_, i) => i !== newFileIndex))
     }
   }
