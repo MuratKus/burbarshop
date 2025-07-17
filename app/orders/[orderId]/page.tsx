@@ -4,9 +4,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 interface OrderPageProps {
-  params: {
+  params: Promise<{
     orderId: string
-  }
+  }>
 }
 
 async function getOrder(orderId: string) {
@@ -48,7 +48,8 @@ function getStatusProgress(status: string) {
 }
 
 export default async function OrderPage({ params }: OrderPageProps) {
-  const order = await getOrder(params.orderId)
+  const { orderId } = await params
+  const order = await getOrder(orderId)
 
   if (!order) {
     notFound()

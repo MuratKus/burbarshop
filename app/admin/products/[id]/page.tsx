@@ -1,8 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
-import { useParams } from 'next/navigation'
 
 type ProductType = 'POSTCARD' | 'FINE_PRINT' | 'RISO_PRINT'
 type VariantSize = 'A4' | 'A5' | 'SQUARE' | 'CUSTOM'
@@ -24,10 +23,15 @@ interface Product {
   variants: ProductVariant[]
 }
 
-export default function EditProductPage() {
+interface EditProductPageProps {
+  params: Promise<{
+    id: string
+  }>
+}
+
+export default function EditProductPage({ params }: EditProductPageProps) {
   const router = useRouter()
-  const params = useParams()
-  const productId = params.id as string
+  const { id: productId } = use(params)
   
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
