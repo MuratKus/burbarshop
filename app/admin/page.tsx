@@ -3,21 +3,32 @@ import { prisma } from '@/lib/prisma'
 import AdminChat from '@/components/AdminChat'
 
 async function getDashboardStats() {
-  const [totalProducts, totalOrders, pendingOrders, totalRevenue] = await Promise.all([
-    prisma.product.count(),
-    prisma.order.count(),
-    prisma.order.count({ where: { status: 'PENDING' } }),
-    prisma.order.aggregate({
-      _sum: { total: true },
-      where: { status: { not: 'CANCELLED' } }
-    })
-  ])
+  try {
+    const [totalProducts, totalOrders, pendingOrders, totalRevenue] = await Promise.all([
+      prisma.product.count(),
+      prisma.order.count(),
+      prisma.order.count({ where: { status: 'PENDING' } }),
+      prisma.order.aggregate({
+        _sum: { total: true },
+        where: { status: { not: 'CANCELLED' } }
+      })
+    ])
 
-  return {
-    totalProducts,
-    totalOrders,
-    pendingOrders,
-    totalRevenue: totalRevenue._sum.total || 0
+    return {
+      totalProducts,
+      totalOrders,
+      pendingOrders,
+      totalRevenue: totalRevenue._sum.total || 0
+    }
+  } catch (error) {
+    console.error('Database connection failed:', error)
+    // Return placeholder data if database is not available
+    return {
+      totalProducts: 0,
+      totalOrders: 0,
+      pendingOrders: 0,
+      totalRevenue: 0
+    }
   }
 }
 
