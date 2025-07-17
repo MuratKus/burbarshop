@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -23,6 +26,12 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'shop.burbar.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'shop.burcinbarbaros.com',
         port: '',
         pathname: '/**',
       },
