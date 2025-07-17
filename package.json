@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run test && prisma generate && next build",
-    "postinstall": "prisma generate",
+    "build": "npm run test && node scripts/setup-env.js && prisma generate && next build",
+    "postinstall": "node scripts/setup-env.js && prisma generate",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
@@ -35,7 +35,10 @@
     "test:unit": "jest --testPathPattern='__tests__'",
     "test:integration": "jest --testPathPattern='integration'",
     "test:e2e": "playwright test",
-    "test:api": "jest --testPathPattern='api'"
+    "test:api": "jest --testPathPattern='api'",
+    "db:migrate": "node scripts/setup-env.js && prisma migrate dev",
+    "db:deploy": "node scripts/setup-env.js && prisma migrate deploy",
+    "db:reset": "node scripts/setup-env.js && prisma migrate reset"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.15.1",
