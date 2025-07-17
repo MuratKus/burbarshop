@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
+import AdminChat from '@/components/AdminChat'
 
 async function getDashboardStats() {
   const [totalProducts, totalOrders, pendingOrders, totalRevenue] = await Promise.all([
@@ -73,33 +74,50 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link 
-            href="/admin/products/new" 
-            className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors text-center"
-          >
-            <div className="text-2xl mb-2">➕</div>
-            <p className="font-medium">Add New Product</p>
-          </Link>
-          
-          <a 
-            href="/admin/orders" 
-            className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors text-center"
-          >
-            <div className="text-2xl mb-2">📋</div>
-            <p className="font-medium">View Orders</p>
-          </a>
-          
-          <a 
-            href="/admin/promos/new" 
-            className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors text-center"
-          >
-            <div className="text-2xl mb-2">🎟️</div>
-            <p className="font-medium">Create Promo Code</p>
-          </a>
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Quick Actions */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link 
+              href="/admin/products/new" 
+              className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors text-center"
+            >
+              <div className="text-2xl mb-2">➕</div>
+              <p className="font-medium">Add New Product</p>
+            </Link>
+            
+            <a 
+              href="/admin/orders" 
+              className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors text-center"
+            >
+              <div className="text-2xl mb-2">📋</div>
+              <p className="font-medium">View Orders</p>
+            </a>
+            
+            <a 
+              href="/admin/inventory" 
+              className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors text-center"
+            >
+              <div className="text-2xl mb-2">📦</div>
+              <p className="font-medium">Check Inventory</p>
+            </a>
+            
+            <a 
+              href="/admin/promos/new" 
+              className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors text-center"
+            >
+              <div className="text-2xl mb-2">🎟️</div>
+              <p className="font-medium">Create Promo Code</p>
+            </a>
+          </div>
+        </div>
+
+        {/* Admin Assistant Chat */}
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Admin Assistant</h2>
+          <AdminChat />
         </div>
       </div>
     </div>
