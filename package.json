@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "db:seed": "tsx prisma/seed.ts",
     "db:setup": "node scripts/setup-database.js",
-    "db:reset": "node scripts/setup-database.js --reset",
+    "db:reset": "node scripts/setup-env.js && prisma migrate reset",
     "db:sample": "node scripts/setup-database.js --reset --seed-sample",
     "db:realistic": "node scripts/realistic-data-generator.js",
     "db:fresh": "npm run db:reset && npm run db:realistic",
@@ -37,8 +37,7 @@
     "test:e2e": "playwright test",
     "test:api": "jest --testPathPattern='api'",
     "db:migrate": "node scripts/setup-env.js && prisma migrate dev",
-    "db:deploy": "node scripts/setup-env.js && prisma migrate deploy",
-    "db:reset": "node scripts/setup-env.js && prisma migrate reset"
+    "db:deploy": "node scripts/setup-env.js && prisma migrate deploy"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.15.1",
@@ -67,6 +66,7 @@
     "next": "^15.0.0",
     "next-auth": "^4.24.0",
     "node-fetch": "^2.7.0",
+    "puppeteer": "^24.14.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "stripe": "^14.0.0",

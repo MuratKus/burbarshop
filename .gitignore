@@ -41,5 +41,6 @@ prisma/dev.db-journal
 claude.md
 klaud.md
 
-# Scripts (development utilities)
-scripts/
+# Scripts (development utilities - ignore some but keep extractors)
+scripts/debug-*
+scripts/temp-*
