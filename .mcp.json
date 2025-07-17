@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "burbar-stripe": {
+      "type": "stdio",
+      "command": "./mcp-servers/stripe-server.js",
+      "args": [],
+      "env": {}
+    },
+    "burbar-orders": {
+      "type": "stdio",
+      "command": "./mcp-servers/order-management-server.js",
+      "args": [],
+      "env": {}
+    },
+    "burbar-database": {
+      "type": "stdio",
+      "command": "./mcp-servers/database-server.js",
+      "args": [],
+      "env": {}
+    }
+  }
+}

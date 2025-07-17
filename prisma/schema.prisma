@@ -1,0 +1,152 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String?   @unique
+  name              String?
+  password          String?
+  magicLinkToken    String?
+  magicLinkExpires  DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  orders    Order[]
+  reviews   Review[]
+  wishlist  Wishlist[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  images      String   // JSON string array of image URLs
+  videos      String?  // JSON string array of video objects {url, thumbnail, type}
+  basePrice   Float
+  type        String   // "POSTCARD", "FINE_PRINT", "RISO_PRINT"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  variants    ProductVariant[]
+  orderItems  OrderItem[]
+  reviews     Review[]
+  wishlists   Wishlist[]
+}
+
+model ProductVariant {
+  id        String @id @default(cuid())
+  productId String
+  size      String // "A4", "A5", "SQUARE", "CUSTOM"
+  price     Float
+  stock     Int    @default(0)
+  
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+  
+  @@unique([productId, size])
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  userId          String?
+  email           String
+  status          String   @default("PENDING") // "PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"
+  subtotal        Float
+  shippingCost    Float
+  total           Float
+  shippingAddress String   // JSON string of shipping address
+  paymentMethod   String   // "stripe" or "paypal"
+  paymentId       String?  // Stripe session ID or PayPal order ID
+  trackingNumber  String?  // Shipping tracking number
+  trackingUrl     String?  // Full tracking URL for customer
+  shippedAt       DateTime? // When order was marked as shipped
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  user      User?       @relation(fields: [userId], references: [id])
+  items     OrderItem[]
+  
+  @@index([email])
+  @@index([status])
+}
+
+model OrderItem {
+  id              String @id @default(cuid())
+  orderId         String
+  productId       String
+  productVariantId String
+  quantity        Int
+  price           Float  // Price at time of order
+  
+  order           Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product         Product        @relation(fields: [productId], references: [id])
+  productVariant  ProductVariant @relation(fields: [productVariantId], references: [id])
+}
+
+model ShippingZone {
+  id       String @id @default(cuid())
+  name     String @unique
+  countries String // JSON string array of country codes
+  rate     Float
+}
+
+model PromoCode {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  description String?
+  type        String   @default("PERCENTAGE") // "PERCENTAGE" or "FIXED_AMOUNT"
+  value       Float    // Percentage (0-100) or fixed amount
+  minOrder    Float?   // Minimum order amount
+  maxUses     Int?     // Maximum number of uses
+  usedCount   Int      @default(0)
+  validFrom   DateTime @default(now())
+  validUntil  DateTime?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  userId    String?
+  email     String
+  name      String
+  rating    Int      // 1-5 stars
+  title     String?
+  comment   String
+  verified  Boolean  @default(false) // true if they purchased the product
+  approved  Boolean  @default(false) // admin approval
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id])
+  
+  @@index([productId])
+  @@index([approved])
+}
+
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    String?
+  email     String   // For guest wishlists
+  productId String
+  createdAt DateTime @default(now())
+  
+  user      User?    @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  @@unique([email, productId])
+  @@index([userId])
+  @@index([email])
+}

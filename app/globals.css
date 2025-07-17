@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground: #2C2C2C;
+  --background: #F8F6F1;
+  
+  /* Professional color palette */
+  --primary-sage: #B8C5B0;
+  --primary-cream: #F8F6F1;
+  --primary-charcoal: #2C2C2C;
+  --accent-coral: #E85A4F;
+  --accent-navy: #1E3A8A;
+  --neutral-gray: #6B7280;
+  --border-light: #E5E7EB;
+  --admin-sidebar: #1F2937;
+  --admin-background: #F9FAFB;
+  --admin-white: #FFFFFF;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground: #F8F6F1;
+    --background: #2C2C2C;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Professional component styles */
+@layer components {
+  .btn-primary {
+    @apply bg-accent-coral text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-accent-coral/90 hover:shadow-elegant-hover active:scale-95;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent text-primary-charcoal border border-neutral-border-light px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-neutral-border-light hover:shadow-elegant;
+  }
+  
+  .card-elegant {
+    @apply bg-white rounded-lg shadow-elegant transition-all duration-200 hover:shadow-elegant-hover;
+  }
+  
+  .admin-card {
+    @apply bg-admin-white rounded-lg shadow-admin-card p-6;
+  }
+  
+  .admin-sidebar {
+    @apply bg-admin-sidebar text-white;
+  }
+  
+  .product-card {
+    @apply card-elegant overflow-hidden cursor-pointer;
+  }
+  
+  .heading-elegant {
+    @apply font-heading text-primary-charcoal;
+  }
+  
+  .body-elegant {
+    @apply font-body text-primary-charcoal;
+  }
+  
+  .text-sage {
+    @apply text-primary-sage;
+  }
+  
+  .text-coral {
+    @apply text-accent-coral;
+  }
+  
+  .bg-sage {
+    @apply bg-primary-sage;
+  }
+  
+  .bg-cream {
+    @apply bg-primary-cream;
+  }
+  
+  .bg-coral {
+    @apply bg-accent-coral;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .elegant-transition {
+    @apply transition-all duration-200 ease-smooth;
+  }
+  
+  .elegant-hover {
+    @apply hover:shadow-elegant-hover hover:scale-105;
+  }
+  
+  .admin-layout {
+    @apply min-h-screen bg-admin-background;
+  }
+  
+  .public-layout {
+    @apply min-h-screen bg-primary-cream;
+  }
+  
+  /* Animation utilities */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+  }
+  
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-1;
+  }
+  
+  .hover-glow {
+    @apply transition-shadow duration-200 hover:shadow-lg hover:shadow-accent-coral/25;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+  
+  /* Focus states */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-accent-coral focus:ring-offset-2;
+  }
+  
+  /* Loading states */
+  .loading-skeleton {
+    @apply animate-pulse bg-neutral-border-light rounded;
+  }
+  
+  .loading-spinner {
+    @apply animate-spin rounded-full border-2 border-primary-sage border-t-transparent;
+  }
+}
