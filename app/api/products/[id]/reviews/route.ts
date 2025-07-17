@@ -5,10 +5,10 @@ const prisma = new PrismaClient()
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: productId } = params
+    const { id: productId } = await params
 
     const reviews = await prisma.review.findMany({
       where: {
@@ -58,10 +58,10 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: productId } = params
+    const { id: productId } = await params
     const { rating, title, comment, name, email, userId } = await request.json()
 
     // Validation

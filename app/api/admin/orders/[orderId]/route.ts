@@ -6,11 +6,11 @@ const prisma = new PrismaClient()
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
     const { status, trackingNumber, trackingUrl } = await request.json()
-    const { orderId } = params
+    const { orderId } = await params
 
     if (!status) {
       return NextResponse.json(

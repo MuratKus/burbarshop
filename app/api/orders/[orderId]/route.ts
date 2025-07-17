@@ -3,10 +3,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
-    const { orderId } = params
+    const { orderId } = await params
     console.log('Fetching order:', orderId)
 
     const order = await prisma.order.findUnique({

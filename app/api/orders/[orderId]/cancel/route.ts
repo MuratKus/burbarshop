@@ -4,10 +4,10 @@ import { releaseInventory, type InventoryItem } from '@/lib/inventory'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
-    const { orderId } = params
+    const { orderId } = await params
 
     // Find the order with its items
     const order = await prisma.order.findUnique({

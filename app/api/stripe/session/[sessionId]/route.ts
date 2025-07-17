@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-export async function GET(request: NextRequest, { params }: { params: { sessionId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ sessionId: string }> }) {
   try {
+    const { sessionId } = await params
     // Handle mock sessions
-    if (params.sessionId.startsWith('mock_session_')) {
-      const sessionData = global.mockSessions?.[params.sessionId]
+    if (sessionId.startsWith('mock_session_')) {
+      const sessionData = global.mockSessions?.[sessionId]
       
       if (!sessionData) {
         return NextResponse.json({ error: 'Session not found' }, { status: 404 })
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: { sessionI
 
         if (order) {
           return NextResponse.json({
-            id: params.sessionId,
+            id: sessionId,
             customer_email: order.email,
             amount_total: Math.round(order.total * 100), // Convert to cents
             payment_status: 'paid',
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest, { params }: { params: { sessionI
 
       // Return session data for payment page
       return NextResponse.json({
-        id: params.sessionId,
+        id: sessionId,
         customer_email: sessionData.email,
         amount_total: Math.round(sessionData.total * 100), // Convert to cents
         payment_status: 'unpaid',
