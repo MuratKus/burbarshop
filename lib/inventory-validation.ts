@@ -1,4 +1,4 @@
-import { CartItem } from '@/lib/cart'
+import type { CartItem } from '@/lib/types'
 
 export interface InventoryIssue {
   productTitle: string
@@ -8,7 +8,10 @@ export interface InventoryIssue {
   correctedQuantity: number
 }
 
-export interface CartItemWithStock extends CartItem {
+export interface CartItemWithStock {
+  productId: string
+  variantId: string
+  quantity: number
   product: {
     id: string
     title: string

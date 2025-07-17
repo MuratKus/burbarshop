@@ -9,6 +9,9 @@ import { Container, Section } from '@/components/ui/layout'
 import { ScrollAnimation } from '@/components/ui/scroll-animations'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { InventoryNotification } from '@/components/InventoryNotification'
+import { validateCartInventory } from '@/lib/inventory-validation'
+import { useToast } from '@/components/Toast'
 import { ShoppingCart, Trash2, Plus, Minus, Truck, AlertCircle } from 'lucide-react'
 
 interface CartItemWithDetails {
@@ -30,10 +33,21 @@ interface CartItemWithDetails {
   }
 }
 
+interface InventoryIssue {
+  productTitle: string
+  variantSize: string
+  requestedQuantity: number
+  availableStock: number
+  correctedQuantity: number
+}
+
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, clearCart, cartItemCount, isLoading } = useCart()
+  const { success } = useToast()
   const [cartWithDetails, setCartWithDetails] = useState<CartItemWithDetails[]>([])
   const [loadingDetails, setLoadingDetails] = useState(true)
+  const [inventoryIssues, setInventoryIssues] = useState<InventoryIssue[]>([])
+  const [showInventoryModal, setShowInventoryModal] = useState(false)
   const hasFetchedDetails = useRef(false)
 
   const decodeHtmlEntities = (text: string) => {
@@ -96,7 +110,46 @@ export default function CartPage() {
           return null
         }).filter(item => item !== null) as CartItemWithDetails[]
         
-        setCartWithDetails(detailedItems)
+        // Validate inventory and auto-correct quantities
+        const cartItemsWithStock = detailedItems.map(item => ({
+          productId: item.productId,
+          variantId: item.variantId,
+          quantity: item.quantity,
+          product: {
+            id: item.product.id,
+            title: item.product.title
+          },
+          variant: {
+            id: item.variant.id,
+            size: item.variant.size,
+            stock: item.variant.stock
+          }
+        }))
+
+        const validation = validateCartInventory(cartItemsWithStock)
+        
+        if (validation.hasIssues) {
+          // Update cart with corrected quantities
+          validation.correctedCart.forEach(correctedItem => {
+            updateQuantity(correctedItem.productId, correctedItem.variantId, correctedItem.quantity)
+          })
+          
+          // Show notification
+          setInventoryIssues(validation.issues)
+          setShowInventoryModal(true)
+          
+          // Update local state with corrected cart
+          const correctedDetailedItems = detailedItems.map(item => {
+            const correctedItem = validation.correctedCart.find(
+              c => c.productId === item.productId && c.variantId === item.variantId
+            )
+            return correctedItem ? { ...item, quantity: correctedItem.quantity } : item
+          }).filter(item => item.quantity > 0)
+          
+          setCartWithDetails(correctedDetailedItems)
+        } else {
+          setCartWithDetails(detailedItems)
+        }
       }
     } catch (error) {
       console.error('Error fetching cart details:', error)
@@ -401,6 +454,18 @@ export default function CartPage() {
       </Section>
 
       <Footer />
+      
+      {/* Inventory Notification Modal */}
+      {showInventoryModal && (
+        <InventoryNotification
+          issues={inventoryIssues}
+          onClose={() => setShowInventoryModal(false)}
+          onContinue={() => {
+            setShowInventoryModal(false)
+            window.location.href = '/checkout'
+          }}
+        />
+      )}
     </main>
   )
 }
