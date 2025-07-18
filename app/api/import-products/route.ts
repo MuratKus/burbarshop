@@ -1,7 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+// Use environment-specific database URL
+const getDatabaseUrl = () => {
+  // Try different environment variable names
+  return process.env.DATABASE_URL || 
+         process.env.DATABASE_DATABASE_URL || 
+         process.env.DATABASE_POSTGRES_URL || 
+         process.env.POSTGRES_URL ||
+         process.env.DATABASE_POSTGRES_PRISMA_URL
+}
+
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: getDatabaseUrl()
+    }
+  }
+})
 
 // All your Etsy products extracted from API structure
 const etsyProducts = [
