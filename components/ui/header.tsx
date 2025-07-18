@@ -27,7 +27,16 @@ const navItems: NavItem[] = [
 export function Header({ className }: HeaderProps) {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
-  const { cartItemCount } = useCart()
+  
+  // Safely get cart count with fallback
+  let cartItemCount = 0
+  try {
+    const cart = useCart()
+    cartItemCount = cart?.cartItemCount || 0
+  } catch (error) {
+    // Cart provider not available yet, use fallback
+    console.warn('Cart provider not initialized:', error)
+  }
 
   return (
     <header className={cn("bg-white/95 backdrop-blur-sm border-b border-neutral-border-light sticky top-0 z-50", className)}>
