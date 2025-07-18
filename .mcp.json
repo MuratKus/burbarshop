@@ -22,9 +22,7 @@
       "type": "stdio",
       "command": "/Users/muratkus/.claude/mcp-servers/vercel-server.js",
       "args": [],
-      "env": {
-        "VERCEL_TOKEN": "${VERCEL_TOKEN}"
-      }
+      "env": {}
     }
   }
 }
