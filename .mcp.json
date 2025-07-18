@@ -17,6 +17,14 @@
       "command": "./mcp-servers/database-server.js",
       "args": [],
       "env": {}
+    },
+    "burbar-vercel": {
+      "type": "stdio",
+      "command": "./mcp-servers/vercel-server.js",
+      "args": [],
+      "env": {
+        "VERCEL_TOKEN": "${VERCEL_TOKEN}"
+      }
     }
   }
 }
