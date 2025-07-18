@@ -86,7 +86,7 @@ export function ProductCard({
         <div className="relative">
           <Link href={`/shop/${slug}`}>
           <div className="relative aspect-square rounded-lg mb-3 overflow-hidden bg-primary-cream">
-            {image && (image.startsWith('http') || image.startsWith('/uploads/')) ? (
+            {image ? (
               <Image
                 src={image}
                 alt={title}
@@ -95,6 +95,7 @@ export function ProductCard({
                   isOutOfStock ? 'grayscale opacity-60' : ''
                 }`}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                unoptimized={image.includes('etsystatic.com')}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
