@@ -10,7 +10,13 @@
 - [x] Optimize product page layout - reduce font sizes for description, title, quantity; make size options dropdown instead of grid; smaller size options title
 
 ## High Priority 🔥
-*All high-priority tasks completed!*
+- [x] Fix order summary section on cart - shipping displayed weirdly, use existing styling with better layout
+- [x] Fix item type and size being white on white on shopping cart in /cart
+- [x] Fix cart updated pop-up that shows customer x item got adjusted due to inventory - quote fails
+- [x] Fix quick add on /shop still has old toast notification - should use new CartToast
+- [x] Fix toast notification for item added to cart - should be top right and not block interactions
+
+*All high-priority tasks completed again!*
 
 ## Medium Priority 🔶
 - [ ] Extract and implement reviews system using Etsy API - use curl to fetch real review data and implement reviews panel from screenshot

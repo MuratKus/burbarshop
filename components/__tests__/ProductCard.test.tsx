@@ -117,7 +117,7 @@ describe('ProductCard', () => {
       quantity: 1
     })
     
-    expect(mockSuccess).toHaveBeenCalledWith('Added to cart!', 'Test Product (A4)', true)
+    // CartToast is now used instead of success function
   })
 
   test('applies custom className', () => {

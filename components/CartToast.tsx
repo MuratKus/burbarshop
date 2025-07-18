@@ -40,18 +40,10 @@ export function CartToast({ isOpen, onClose, productName, productColor, productS
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Toast positioned top-right, no backdrop */}
       <div 
-        className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-300 ${
-          isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
-        onClick={handleClose}
-      />
-      
-      {/* Toast Modal */}
-      <div 
-        className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[400px] max-w-[90vw] bg-white rounded-lg shadow-2xl border border-gray-200 transition-all duration-300 ${
-          isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+        className={`fixed top-4 right-4 z-50 w-[400px] max-w-[90vw] bg-white rounded-lg shadow-2xl border border-gray-200 transition-all duration-300 ${
+          isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
         }`}
       >
         {/* Header */}

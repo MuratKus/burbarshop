@@ -311,10 +311,10 @@ export default function CartPage() {
                                       </Link>
                                     </h3>
                                     <div className="flex items-center gap-2 mt-2">
-                                      <Badge variant="secondary" className="text-xs">
+                                      <Badge variant="secondary" className="text-xs bg-primary-sage/20 text-primary-charcoal border-primary-sage/30">
                                         {item.product.type.toLowerCase().replace('_', ' ')}
                                       </Badge>
-                                      <Badge variant="outline" className="text-xs">
+                                      <Badge variant="outline" className="text-xs bg-primary-cream text-primary-charcoal border-neutral-border-light">
                                         {item.variant.size}
                                       </Badge>
                                     </div>
@@ -400,15 +400,15 @@ export default function CartPage() {
                             <span>€{cartTotal.toFixed(2)}</span>
                           </div>
                           
-                          <div className="flex justify-between text-gray-600">
+                          <div className="flex justify-between items-center text-gray-600">
                             <span>Shipping</span>
-                            <span>
+                            <span className="text-right">
                               {shippingCost === 0 ? (
-                                <Badge variant="outline" className="text-green-600 border-green-200">
+                                <span className="px-2 py-1 bg-green-50 text-green-700 text-sm font-medium rounded-md">
                                   Free
-                                </Badge>
+                                </span>
                               ) : (
-                                `€${shippingCost.toFixed(2)}`
+                                <span className="font-medium">€{shippingCost.toFixed(2)}</span>
                               )}
                             </span>
                           </div>

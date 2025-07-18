@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Button } from './Button'
 import { useCart } from './CartProvider'
 import { useToast } from './Toast'
+import { CartToast } from './CartToast'
 import { Heart } from 'lucide-react'
 
 interface ProductCardProps {
@@ -45,6 +46,8 @@ export function ProductCard({
   const { success } = useToast()
   const [isInWishlist, setIsInWishlist] = useState(false)
   const [wishlistLoading, setWishlistLoading] = useState(false)
+  const [showCartToast, setShowCartToast] = useState(false)
+  const [addedProduct, setAddedProduct] = useState<{name: string, size: string, quantity: number} | null>(null)
   
   const formatType = (type: string) => {
     return type.toLowerCase().replace('_', ' ')
@@ -176,7 +179,12 @@ export function ProductCard({
                     variantId: firstVariant.id,
                     quantity: 1
                   })
-                  success('Added to cart!', `${decodeHtmlEntities(title)} (${firstVariant.size})`, true)
+                  setAddedProduct({
+                    name: decodeHtmlEntities(title),
+                    size: firstVariant.size,
+                    quantity: 1
+                  })
+                  setShowCartToast(true)
                 }
               }}
             >
@@ -185,6 +193,17 @@ export function ProductCard({
           </div>
         </div>
       </div>
+      
+      {/* Cart Toast */}
+      {addedProduct && (
+        <CartToast
+          isOpen={showCartToast}
+          onClose={() => setShowCartToast(false)}
+          productName={addedProduct.name}
+          productSize={addedProduct.size}
+          quantity={addedProduct.quantity}
+        />
+      )}
     </div>
   )
 }

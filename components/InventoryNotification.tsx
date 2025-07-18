@@ -76,7 +76,7 @@ export function InventoryNotification({
 
           <div className="bg-blue-50 rounded-lg p-4 mb-6">
             <p className="text-sm text-blue-800">
-              <strong>We&apos;ve automatically updated your cart</strong> to reflect current inventory levels. 
+              <strong>We have automatically updated your cart</strong> to reflect current inventory levels. 
               You can still proceed to checkout with the adjusted quantities.
             </p>
           </div>
