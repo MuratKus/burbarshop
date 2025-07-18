@@ -20,7 +20,7 @@
     },
     "burbar-vercel": {
       "type": "stdio",
-      "command": "./mcp-servers/vercel-server.js",
+      "command": "/Users/muratkus/.claude/mcp-servers/vercel-server.js",
       "args": [],
       "env": {
         "VERCEL_TOKEN": "${VERCEL_TOKEN}"

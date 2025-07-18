@@ -44,3 +44,7 @@ klaud.md
 # Scripts (development utilities - ignore some but keep extractors)
 scripts/debug-*
 scripts/temp-*
+
+# MCP Servers (keep in user directory, not in repo)
+mcp-servers/vercel-server.js
+test-vercel-mcp.js
