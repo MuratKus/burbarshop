@@ -43,29 +43,15 @@ export default function CheckoutPage() {
   const router = useRouter()
   const { cart, cartItemCount, clearCart } = useCart()
   const { error: showError } = useToast()
+  
+  // All state declarations first
   const [cartWithDetails, setCartWithDetails] = useState<CartItemWithDetails[]>([])
   const [loading, setLoading] = useState(true)
-  
-  // Refs for mobile auto-focus optimization
-  const emailRef = useRef<HTMLInputElement>(null)
-  const firstNameRef = useRef<HTMLInputElement>(null)
-  const lastNameRef = useRef<HTMLInputElement>(null)
-  const addressRef = useRef<HTMLInputElement>(null)
-  const cityRef = useRef<HTMLInputElement>(null)
-  const postalCodeRef = useRef<HTMLInputElement>(null)
-  const phoneRef = useRef<HTMLInputElement>(null)
-
-  const decodeHtmlEntities = (text: string) => {
-    const textarea = document.createElement('textarea')
-    textarea.innerHTML = text
-    return textarea.value
-  }
-
-  // Calculate proper cart total from detailed items
-  const cartTotal = cartWithDetails.reduce((total, item) => {
-    return total + (item.variant.price * item.quantity)
-  }, 0)
+  const [showPayment, setShowPayment] = useState(false)
+  const [clientSecret, setClientSecret] = useState<string>('')
+  const [paymentIntentId, setPaymentIntentId] = useState<string>('')
   const [processing, setProcessing] = useState(false)
+  const [redirecting, setRedirecting] = useState(false)
   const [formData, setFormData] = useState<CheckoutFormData>({
     email: '',
     firstName: '',
@@ -76,6 +62,27 @@ export default function CheckoutPage() {
     country: 'DE',
     phone: ''
   })
+  
+  // Refs for mobile auto-focus optimization
+  const emailRef = useRef<HTMLInputElement>(null)
+  const firstNameRef = useRef<HTMLInputElement>(null)
+  const lastNameRef = useRef<HTMLInputElement>(null)
+  const addressRef = useRef<HTMLInputElement>(null)
+  const cityRef = useRef<HTMLInputElement>(null)
+  const postalCodeRef = useRef<HTMLInputElement>(null)
+  const phoneRef = useRef<HTMLInputElement>(null)
+
+  // Utility functions
+  const decodeHtmlEntities = (text: string) => {
+    const textarea = document.createElement('textarea')
+    textarea.innerHTML = text
+    return textarea.value
+  }
+
+  // Calculate proper cart total from detailed items
+  const cartTotal = cartWithDetails.reduce((total, item) => {
+    return total + (item.variant.price * item.quantity)
+  }, 0)
 
   const shippingCost = cartTotal >= 50 ? 0 : 5.99
   const finalTotal = cartTotal + shippingCost
@@ -168,9 +175,6 @@ export default function CheckoutPage() {
     }
   }
 
-  const [clientSecret, setClientSecret] = useState<string>('')
-  const [paymentIntentId, setPaymentIntentId] = useState<string>('')
-  const [showPayment, setShowPayment] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -219,8 +223,6 @@ export default function CheckoutPage() {
     }
   }
 
-  const [redirecting, setRedirecting] = useState(false)
-
   const handlePaymentSuccess = async () => {
     setRedirecting(true)
     
@@ -256,11 +258,8 @@ export default function CheckoutPage() {
       if (orderResponse.ok) {
         const order = await orderResponse.json()
         
-        // Clear cart after successful order creation
-        clearCart()
-        
-        // Redirect to success page
-        window.location.href = `/checkout/success?order_id=${order.id}&payment_intent=${paymentIntentId}`
+        // Redirect to success page immediately, cart will be cleared there
+        window.location.href = `/checkout/success?order_id=${order.id}&payment_intent=${paymentIntentId}&clear_cart=true`
       } else {
         const error = await orderResponse.json()
         setRedirecting(false)

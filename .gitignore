@@ -24,6 +24,18 @@ yarn-error.log*
 
 # Local env files
 .env*.local
+.env.production
+
+# Development images (downloaded from production)
+/public/images/products/
+/public/images/*.jpg
+/public/images/*.jpeg
+/public/images/*.png
+/public/images/*.webp
+
+# Database backups (development only)
+/backups/
+scripts/extracted-products.json
 
 # Vercel
 .vercel
@@ -40,6 +52,9 @@ prisma/dev.db-journal
 .claude/
 claude.md
 klaud.md
+
+# Project todos (track in git)
+!.todos.md
 
 # Scripts (development utilities - ignore some but keep extractors)
 scripts/debug-*

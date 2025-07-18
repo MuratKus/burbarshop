@@ -106,7 +106,7 @@ export function ProductCard({
                   isOutOfStock ? 'grayscale opacity-60' : ''
                 }`}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                unoptimized={image.includes('etsystatic.com')}
+                {...(image.includes('etsystatic.com') && { unoptimized: true })}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">

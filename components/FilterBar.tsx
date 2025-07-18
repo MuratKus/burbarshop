@@ -102,13 +102,13 @@ export function FilterBar({ onFilterChange, className, products = [] }: FilterBa
   const hasActiveFilters = selectedTypes.length > 0 || selectedSizes.length > 0 || selectedPriceRanges.length > 0
 
   return (
-    <div className={`bg-white border border-neutral-border-light rounded-xl p-6 shadow-elegant ${className || ''}`}>
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="font-heading text-lg font-semibold text-primary-charcoal">Filters</h3>
+    <div className={`bg-white border border-gray-200 rounded-lg p-4 shadow-sm ${className || ''}`}>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
         {hasActiveFilters && (
           <button
             onClick={clearAllFilters}
-            className="text-sm text-accent-coral hover:text-accent-terracotta transition-colors font-medium"
+            className="text-xs text-orange-600 hover:text-orange-700 transition-colors font-medium"
           >
             Clear all
           </button>
@@ -116,17 +116,17 @@ export function FilterBar({ onFilterChange, className, products = [] }: FilterBa
       </div>
       
       {/* Product Type Filter */}
-      <div className="mb-6">
-        <h4 className="font-medium text-primary-charcoal mb-3">Type</h4>
+      <div className="mb-4">
+        <h4 className="text-sm font-medium text-gray-900 mb-2">Type</h4>
         <div className="space-y-1">
           {availableFilters.types.map((type) => (
             <button
               key={type}
               onClick={() => handleTypeChange(type)}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`w-full text-left px-3 py-2 rounded-md text-xs font-medium transition-all duration-200 ${
                 selectedTypes.includes(type)
-                  ? 'bg-primary-sage text-white shadow-sm'
-                  : 'text-neutral-gray hover:bg-primary-sage/10 hover:text-primary-charcoal'
+                  ? 'bg-orange-500 text-white shadow-sm'
+                  : 'text-gray-700 bg-gray-50 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
               {type.toLowerCase().replace('_', ' ')}
@@ -136,17 +136,17 @@ export function FilterBar({ onFilterChange, className, products = [] }: FilterBa
       </div>
 
       {/* Size Filter */}
-      <div className="mb-6">
-        <h4 className="font-medium text-primary-charcoal mb-3">Size</h4>
+      <div className="mb-4">
+        <h4 className="text-sm font-medium text-gray-900 mb-2">Size</h4>
         <div className="space-y-1">
           {availableFilters.sizes.map((size) => (
             <button
               key={size}
               onClick={() => handleSizeChange(size)}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`w-full text-left px-3 py-2 rounded-md text-xs font-medium transition-all duration-200 ${
                 selectedSizes.includes(size)
-                  ? 'bg-primary-sage text-white shadow-sm'
-                  : 'text-neutral-gray hover:bg-primary-sage/10 hover:text-primary-charcoal'
+                  ? 'bg-orange-500 text-white shadow-sm'
+                  : 'text-gray-700 bg-gray-50 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
               {size}
@@ -157,16 +157,16 @@ export function FilterBar({ onFilterChange, className, products = [] }: FilterBa
 
       {/* Price Range */}
       <div>
-        <h4 className="font-medium text-primary-charcoal mb-3">Price Range</h4>
+        <h4 className="text-sm font-medium text-gray-900 mb-2">Price Range</h4>
         <div className="space-y-1">
           {availableFilters.priceRanges.map((range) => (
             <button
               key={range}
               onClick={() => handlePriceRangeChange(range)}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`w-full text-left px-3 py-2 rounded-md text-xs font-medium transition-all duration-200 ${
                 selectedPriceRanges.includes(range)
-                  ? 'bg-primary-sage text-white shadow-sm'
-                  : 'text-neutral-gray hover:bg-primary-sage/10 hover:text-primary-charcoal'
+                  ? 'bg-orange-500 text-white shadow-sm'
+                  : 'text-gray-700 bg-gray-50 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
               {range}

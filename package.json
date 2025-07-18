@@ -10,6 +10,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
+    "check": "./scripts/check-code.sh",
+    "type-check": "tsc --noEmit --skipLibCheck",
     "db:seed": "tsx prisma/seed.ts",
     "db:setup": "node scripts/setup-database.js",
     "db:reset": "node scripts/setup-env.cjs && prisma migrate reset",

@@ -4,7 +4,9 @@ import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { ReactNode } from 'react'
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+// Safely initialize Stripe with fallback
+const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+const stripePromise = stripePublishableKey ? loadStripe(stripePublishableKey) : null
 
 interface StripeProviderProps {
   children: ReactNode
@@ -12,6 +14,12 @@ interface StripeProviderProps {
 }
 
 export function StripeProvider({ children, clientSecret }: StripeProviderProps) {
+  // Don't render if Stripe is not configured
+  if (!stripePromise) {
+    console.error('Stripe publishable key not found')
+    return <div>Payment system not configured</div>
+  }
+
   const options = {
     clientSecret,
     appearance: {

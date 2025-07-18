@@ -8,12 +8,13 @@ import { Container, Section, Grid } from '@/components/ui/layout'
 import { ScrollAnimation } from '@/components/ui/scroll-animations'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { ChevronDown, Filter, X } from 'lucide-react'
+import { ChevronDown, Filter, X, Grid3X3, LayoutGrid } from 'lucide-react'
 
 interface Product {
   id: string
   slug: string
   title: string
+  description?: string
   type: string
   basePrice: number
   images: string
@@ -37,6 +38,7 @@ export default function Shop() {
     priceRanges: []
   })
   const [showMobileFilters, setShowMobileFilters] = useState(false)
+  const [viewMode, setViewMode] = useState<'large' | 'small'>('large')
 
   useEffect(() => {
     fetchProducts()
@@ -231,27 +233,59 @@ export default function Shop() {
                     </span>
                   </div>
                   
-                  <div className="flex items-center gap-2">
-                    <span className="body-elegant text-sm text-neutral-gray">Sort by:</span>
-                    <div className="relative">
-                      <select 
-                        className="appearance-none bg-white border border-neutral-border-light rounded-lg px-4 py-2 pr-8 text-sm text-primary-charcoal focus:outline-none focus:ring-2 focus:ring-accent-coral focus:border-accent-coral"
-                        value={sortBy}
-                        onChange={(e) => handleSortChange(e.target.value)}
+                  <div className="flex items-center gap-4">
+                    {/* View Toggle */}
+                    <div className="flex items-center gap-1 border border-gray-200 rounded-lg p-1">
+                      <button
+                        onClick={() => setViewMode('large')}
+                        className={`p-2 rounded-md transition-colors ${
+                          viewMode === 'large' 
+                            ? 'bg-orange-500 text-white' 
+                            : 'text-gray-600 hover:bg-gray-100'
+                        }`}
+                        title="Large view"
                       >
-                        <option value="featured">Featured</option>
-                        <option value="newest">Newest First</option>
-                        <option value="price-low">Price: Low to High</option>
-                        <option value="price-high">Price: High to Low</option>
-                        <option value="name">Name: A to Z</option>
-                      </select>
-                      <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-gray pointer-events-none" />
+                        <LayoutGrid className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => setViewMode('small')}
+                        className={`p-2 rounded-md transition-colors ${
+                          viewMode === 'small' 
+                            ? 'bg-orange-500 text-white' 
+                            : 'text-gray-600 hover:bg-gray-100'
+                        }`}
+                        title="Small view"
+                      >
+                        <Grid3X3 className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {/* Sort Controls */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600">Sort by:</span>
+                      <div className="relative">
+                        <select 
+                          className="appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2 pr-8 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                          value={sortBy}
+                          onChange={(e) => handleSortChange(e.target.value)}
+                        >
+                          <option value="featured">Featured</option>
+                          <option value="newest">Newest First</option>
+                          <option value="price-low">Price: Low to High</option>
+                          <option value="price-high">Price: High to Low</option>
+                          <option value="name">Name: A to Z</option>
+                        </select>
+                        <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Products Grid */}
-                <Grid cols={3} gap="lg">
+                <div className={viewMode === 'large' 
+                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' 
+                  : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4'
+                }>
                   {filteredProducts.map((product, index) => {
                     const images = JSON.parse(product.images || '[]')
                     const firstImage = images.length > 0 ? images[0] : null
@@ -262,14 +296,16 @@ export default function Shop() {
                         id={product.id}
                         slug={product.slug}
                         title={product.title}
+                        description={product.description}
                         type={product.type}
                         basePrice={product.basePrice}
                         image={firstImage}
                         variants={product.variants}
+                        size={viewMode}
                       />
                     )
                   })}
-                </Grid>
+                </div>
 
                 {/* Empty State */}
                 {filteredProducts.length === 0 && !loading && (
