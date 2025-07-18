@@ -4,13 +4,13 @@
 const https = require('https');
 
 const data = JSON.stringify({
-  secret: 'fix-images-now-please'
+  secret: 'cleanup-duplicates-now'
 });
 
 const options = {
   hostname: 'www.burcinbarbaros.com',
   port: 443,
-  path: '/api/fix-images',
+  path: '/api/cleanup-duplicates',
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
