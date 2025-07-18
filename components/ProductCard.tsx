@@ -81,8 +81,8 @@ export function ProductCard({
 
   return (
     <div className={`product-card group ${className || ''}`}>
-      {/* Enhanced card with better visual distinction */}
-      <div className="bg-primary-warm border border-neutral-border-light/40 rounded-xl p-4 shadow-elegant hover:shadow-elegant-hover transition-all duration-300 group-hover:border-accent-ochre/50 group-hover:bg-white group-hover:scale-[1.02]">
+      {/* Enhanced card with subtle borders */}
+      <div className="bg-primary-warm border border-neutral-border-light/20 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300 group-hover:border-accent-ochre/30 group-hover:bg-white group-hover:scale-[1.01]">
         <div className="relative">
           <Link href={`/shop/${slug}`}>
           <div className="relative aspect-square rounded-lg mb-3 overflow-hidden bg-primary-cream">

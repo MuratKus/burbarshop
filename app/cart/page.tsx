@@ -9,6 +9,8 @@ import { Container, Section } from '@/components/ui/layout'
 import { ScrollAnimation } from '@/components/ui/scroll-animations'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { InventoryNotification } from '@/components/InventoryNotification'
 import { validateCartInventory } from '@/lib/inventory-validation'
 import { useToast } from '@/components/Toast'
@@ -309,12 +311,12 @@ export default function CartPage() {
                                       </Link>
                                     </h3>
                                     <div className="flex items-center gap-2 mt-2">
-                                      <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-50 text-gray-600 border border-gray-200">
+                                      <Badge variant="secondary" className="text-xs">
                                         {item.product.type.toLowerCase().replace('_', ' ')}
-                                      </span>
-                                      <span className="text-sm text-gray-600">
+                                      </Badge>
+                                      <Badge variant="outline" className="text-xs">
                                         {item.variant.size}
-                                      </span>
+                                      </Badge>
                                     </div>
                                     <p className="text-lg font-semibold text-accent-coral mt-2">
                                       €{item.variant.price.toFixed(2)}
@@ -334,18 +336,18 @@ export default function CartPage() {
                                 {/* Quantity Controls */}
                                 <div className="flex items-center justify-between mt-4">
                                   <div className="flex items-center space-x-4">
-                                    <span className="text-sm text-gray-900">Quantity:</span>
-                                    <div className="flex items-center border border-gray-200 rounded-lg">
+                                    <span className="text-sm font-medium text-gray-900">Quantity:</span>
+                                    <div className="flex items-center border border-neutral-border-light rounded-lg bg-white shadow-sm">
                                       <Button
                                         onClick={() => handleQuantityChange(item.productId, item.variantId, item.quantity - 1)}
                                         disabled={item.quantity <= 1}
                                         variant="ghost"
                                         size="sm"
-                                        className="px-3 py-1 rounded-r-none text-gray-600 hover:text-gray-900"
+                                        className="px-3 py-2 rounded-r-none text-gray-600 hover:text-primary-charcoal hover:bg-primary-sage/10 disabled:opacity-30"
                                       >
                                         <Minus className="w-4 h-4" />
                                       </Button>
-                                      <span className="px-4 py-1 text-gray-900 border-x border-gray-200">
+                                      <span className="px-4 py-2 text-gray-900 border-x border-neutral-border-light font-medium bg-primary-cream/30 min-w-[3rem] text-center">
                                         {item.quantity}
                                       </span>
                                       <Button
@@ -353,7 +355,7 @@ export default function CartPage() {
                                         disabled={item.quantity >= item.variant.stock}
                                         variant="ghost"
                                         size="sm"
-                                        className="px-3 py-1 rounded-l-none text-gray-600 hover:text-gray-900"
+                                        className="px-3 py-2 rounded-l-none text-gray-600 hover:text-primary-charcoal hover:bg-primary-sage/10 disabled:opacity-30"
                                       >
                                         <Plus className="w-4 h-4" />
                                       </Button>
@@ -364,17 +366,16 @@ export default function CartPage() {
                                     <p className="text-lg font-semibold text-gray-900">
                                       €{(item.variant.price * item.quantity).toFixed(2)}
                                     </p>
-                                    <div className={`flex items-center justify-end text-sm mt-1 ${
-                                      item.variant.stock <= 5 
-                                        ? 'text-red-500' 
-                                        : 'text-neutral-gray'
-                                    }`}>
-                                      {item.variant.stock <= 5 && <AlertCircle className="w-4 h-4 mr-1" />}
-                                      <span className="text-sm">
+                                    {item.variant.stock <= 5 ? (
+                                      <Badge variant="destructive" className="text-xs mt-1">
+                                        <AlertCircle className="w-3 h-3 mr-1" />
+                                        Only {item.variant.stock} left
+                                      </Badge>
+                                    ) : (
+                                      <p className="text-sm text-neutral-gray mt-1">
                                         {item.variant.stock} available
-                                        {item.variant.stock <= 5 && ' (Low stock!)'}
-                                      </span>
-                                    </div>
+                                      </p>
+                                    )}
                                   </div>
                                 </div>
                               </div>
@@ -393,7 +394,7 @@ export default function CartPage() {
                       <CardContent className="p-6">
                         <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Summary</h2>
                         
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                           <div className="flex justify-between text-gray-600">
                             <span>Subtotal ({cartItemCount} items)</span>
                             <span>€{cartTotal.toFixed(2)}</span>
@@ -403,7 +404,9 @@ export default function CartPage() {
                             <span>Shipping</span>
                             <span>
                               {shippingCost === 0 ? (
-                                <span className="text-green-600">Free</span>
+                                <Badge variant="outline" className="text-green-600 border-green-200">
+                                  Free
+                                </Badge>
                               ) : (
                                 `€${shippingCost.toFixed(2)}`
                               )}
@@ -411,21 +414,19 @@ export default function CartPage() {
                           </div>
                           
                           {cartTotal < 50 && (
-                            <div className="bg-primary-cream border border-primary-sage/20 rounded-lg p-3">
-                              <div className="flex items-center space-x-2">
-                                <Truck className="w-4 h-4 text-accent-coral" />
-                                <p className="text-sm text-gray-900 font-medium">
-                                  Add €{(50 - cartTotal).toFixed(2)} more for free shipping!
-                                </p>
-                              </div>
-                            </div>
+                            <Alert variant="info" className="border-accent-coral/20 bg-accent-coral/5">
+                              <Truck className="w-4 h-4" />
+                              <AlertDescription className="text-sm font-medium">
+                                Add €{(50 - cartTotal).toFixed(2)} more for free shipping!
+                              </AlertDescription>
+                            </Alert>
                           )}
                           
-                          <div className="border-t pt-3">
-                            <div className="flex justify-between text-lg font-semibold text-gray-900">
-                              <span>Total</span>
-                              <span>€{finalTotal.toFixed(2)}</span>
-                            </div>
+                          <Separator />
+                          
+                          <div className="flex justify-between text-lg font-semibold text-gray-900">
+                            <span>Total</span>
+                            <span>€{finalTotal.toFixed(2)}</span>
                           </div>
                         </div>
 

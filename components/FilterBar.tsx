@@ -102,13 +102,13 @@ export function FilterBar({ onFilterChange, className, products = [] }: FilterBa
   const hasActiveFilters = selectedTypes.length > 0 || selectedSizes.length > 0 || selectedPriceRanges.length > 0
 
   return (
-    <div className={`bg-gray-50 p-6 rounded-lg ${className || ''}`}>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-gray-900">Filters</h3>
+    <div className={`bg-white border border-neutral-border-light rounded-xl p-6 shadow-elegant ${className || ''}`}>
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="font-heading text-lg font-semibold text-primary-charcoal">Filters</h3>
         {hasActiveFilters && (
           <button
             onClick={clearAllFilters}
-            className="text-sm text-gray-500 hover:text-gray-700"
+            className="text-sm text-accent-coral hover:text-accent-terracotta transition-colors font-medium"
           >
             Clear all
           </button>
@@ -117,56 +117,60 @@ export function FilterBar({ onFilterChange, className, products = [] }: FilterBa
       
       {/* Product Type Filter */}
       <div className="mb-6">
-        <h4 className="font-medium text-gray-700 mb-2">Type</h4>
-        <div className="space-y-2">
+        <h4 className="font-medium text-primary-charcoal mb-3">Type</h4>
+        <div className="space-y-1">
           {availableFilters.types.map((type) => (
-            <label key={type} className="flex items-center">
-              <input 
-                type="checkbox" 
-                className="mr-2 text-gray-900"
-                checked={selectedTypes.includes(type)}
-                onChange={() => handleTypeChange(type)}
-              />
-              <span className="text-sm capitalize text-gray-900">
-                {type.toLowerCase().replace('_', ' ')}
-              </span>
-            </label>
+            <button
+              key={type}
+              onClick={() => handleTypeChange(type)}
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                selectedTypes.includes(type)
+                  ? 'bg-primary-sage text-white shadow-sm'
+                  : 'text-neutral-gray hover:bg-primary-sage/10 hover:text-primary-charcoal'
+              }`}
+            >
+              {type.toLowerCase().replace('_', ' ')}
+            </button>
           ))}
         </div>
       </div>
 
       {/* Size Filter */}
       <div className="mb-6">
-        <h4 className="font-medium text-gray-700 mb-2">Size</h4>
-        <div className="space-y-2">
+        <h4 className="font-medium text-primary-charcoal mb-3">Size</h4>
+        <div className="space-y-1">
           {availableFilters.sizes.map((size) => (
-            <label key={size} className="flex items-center">
-              <input 
-                type="checkbox" 
-                className="mr-2 text-gray-900"
-                checked={selectedSizes.includes(size)}
-                onChange={() => handleSizeChange(size)}
-              />
-              <span className="text-sm text-gray-900">{size}</span>
-            </label>
+            <button
+              key={size}
+              onClick={() => handleSizeChange(size)}
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                selectedSizes.includes(size)
+                  ? 'bg-primary-sage text-white shadow-sm'
+                  : 'text-neutral-gray hover:bg-primary-sage/10 hover:text-primary-charcoal'
+              }`}
+            >
+              {size}
+            </button>
           ))}
         </div>
       </div>
 
       {/* Price Range */}
       <div>
-        <h4 className="font-medium text-gray-700 mb-2">Price Range</h4>
-        <div className="space-y-2">
+        <h4 className="font-medium text-primary-charcoal mb-3">Price Range</h4>
+        <div className="space-y-1">
           {availableFilters.priceRanges.map((range) => (
-            <label key={range} className="flex items-center">
-              <input 
-                type="checkbox" 
-                className="mr-2 text-gray-900"
-                checked={selectedPriceRanges.includes(range)}
-                onChange={() => handlePriceRangeChange(range)}
-              />
-              <span className="text-sm text-gray-900">{range}</span>
-            </label>
+            <button
+              key={range}
+              onClick={() => handlePriceRangeChange(range)}
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                selectedPriceRanges.includes(range)
+                  ? 'bg-primary-sage text-white shadow-sm'
+                  : 'text-neutral-gray hover:bg-primary-sage/10 hover:text-primary-charcoal'
+              }`}
+            >
+              {range}
+            </button>
           ))}
         </div>
       </div>

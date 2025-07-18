@@ -101,15 +101,15 @@ function ToastItem({ toast, onRemove }: { toast: Toast, onRemove: (id: string) =
   const getToastStyles = (type: Toast['type']) => {
     switch (type) {
       case 'success':
-        return 'bg-green-50 border-green-200 text-green-800'
+        return 'bg-primary-sage/10 border-primary-sage/30 text-primary-charcoal'
       case 'error':
         return 'bg-red-50 border-red-200 text-red-800'
       case 'warning':
-        return 'bg-yellow-50 border-yellow-200 text-yellow-800'
+        return 'bg-accent-ochre/10 border-accent-ochre/30 text-primary-charcoal'
       case 'info':
-        return 'bg-blue-50 border-blue-200 text-blue-800'
+        return 'bg-primary-cream border-neutral-border-light text-primary-charcoal'
       default:
-        return 'bg-gray-50 border-gray-200 text-gray-800'
+        return 'bg-primary-warm border-neutral-border-light text-primary-charcoal'
     }
   }
 
@@ -147,7 +147,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast, onRemove: (id: string) =
           </div>
           <button
             onClick={() => onRemove(toast.id)}
-            className="flex-shrink-0 ml-2 text-sm opacity-50 hover:opacity-100 transition-opacity"
+            className="flex-shrink-0 ml-2 text-sm opacity-50 hover:opacity-100 transition-opacity text-primary-charcoal hover:text-accent-coral"
           >
             ✕
           </button>
@@ -158,14 +158,14 @@ function ToastItem({ toast, onRemove }: { toast: Toast, onRemove: (id: string) =
           <div className="mt-3 flex gap-2">
             <Link
               href="/cart"
-              className="flex-1 bg-white/90 hover:bg-white text-gray-800 text-xs font-medium py-2 px-3 rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-200 flex items-center justify-center gap-1"
+              className="flex-1 bg-white/90 hover:bg-white text-primary-charcoal text-xs font-medium py-2 px-3 rounded-lg border border-primary-sage/30 hover:border-primary-sage/50 transition-all duration-200 flex items-center justify-center gap-1 shadow-sm"
             >
               <ShoppingCart className="w-3 h-3" />
               View Cart
             </Link>
             <Link
               href="/checkout"
-              className="flex-1 bg-accent-coral hover:bg-accent-coral/90 text-white text-xs font-medium py-2 px-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-1"
+              className="flex-1 bg-accent-coral hover:bg-accent-coral/90 text-white text-xs font-medium py-2 px-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-1 shadow-sm"
             >
               <Eye className="w-3 h-3" />
               Checkout

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "./button"
 import { ShoppingCart, User, Search, Menu, Heart } from "lucide-react"
+import { useCart } from "@/components/CartProvider"
 
 interface HeaderProps {
   className?: string
@@ -26,6 +27,7 @@ const navItems: NavItem[] = [
 export function Header({ className }: HeaderProps) {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+  const { cartItemCount } = useCart()
 
   return (
     <header className={cn("bg-white/95 backdrop-blur-sm border-b border-neutral-border-light sticky top-0 z-50", className)}>
@@ -93,10 +95,12 @@ export function Header({ className }: HeaderProps) {
               className="relative p-2 text-primary-charcoal hover:text-accent-coral transition-colors"
             >
               <ShoppingCart className="w-5 h-5" />
-              {/* Cart badge - would be dynamic */}
-              <span className="absolute -top-1 -right-1 bg-accent-coral text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                2
-              </span>
+              {/* Cart badge - dynamic based on cart items */}
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-accent-coral text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
             </Link>
 
             {/* Mobile Menu Button */}

@@ -57,7 +57,7 @@ export default function Shop() {
   }
 
   const applyFilters = () => {
-    let filtered = products
+    let filtered = [...products] // Create a new array to avoid mutations
 
     // Filter by search query
     if (searchQuery.trim()) {
@@ -98,19 +98,19 @@ export default function Shop() {
       })
     }
 
-    // Apply sorting
+    // Apply sorting - create a new sorted array
     switch (sortBy) {
       case 'price-low':
-        filtered.sort((a, b) => a.basePrice - b.basePrice)
+        filtered = [...filtered].sort((a, b) => a.basePrice - b.basePrice)
         break
       case 'price-high':
-        filtered.sort((a, b) => b.basePrice - a.basePrice)
+        filtered = [...filtered].sort((a, b) => b.basePrice - a.basePrice)
         break
       case 'name':
-        filtered.sort((a, b) => a.title.localeCompare(b.title))
+        filtered = [...filtered].sort((a, b) => a.title.localeCompare(b.title))
         break
       case 'newest':
-        filtered.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+        filtered = [...filtered].sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
         break
       default:
         // Keep original order for 'featured'
@@ -222,13 +222,13 @@ export default function Shop() {
 
                 {/* Products Grid */}
                 <Grid cols={3} gap="lg">
-                  {filteredProducts.map((product) => {
+                  {filteredProducts.map((product, index) => {
                     const images = JSON.parse(product.images || '[]')
                     const firstImage = images.length > 0 ? images[0] : null
                     
                     return (
                       <ProductCard
-                        key={product.id}
+                        key={`${product.id}-${sortBy}-${index}`}
                         id={product.id}
                         slug={product.slug}
                         title={product.title}

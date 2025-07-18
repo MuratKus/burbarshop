@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/Button'
@@ -45,6 +45,15 @@ export default function CheckoutPage() {
   const { error: showError } = useToast()
   const [cartWithDetails, setCartWithDetails] = useState<CartItemWithDetails[]>([])
   const [loading, setLoading] = useState(true)
+  
+  // Refs for mobile auto-focus optimization
+  const emailRef = useRef<HTMLInputElement>(null)
+  const firstNameRef = useRef<HTMLInputElement>(null)
+  const lastNameRef = useRef<HTMLInputElement>(null)
+  const addressRef = useRef<HTMLInputElement>(null)
+  const cityRef = useRef<HTMLInputElement>(null)
+  const postalCodeRef = useRef<HTMLInputElement>(null)
+  const phoneRef = useRef<HTMLInputElement>(null)
 
   const decodeHtmlEntities = (text: string) => {
     const textarea = document.createElement('textarea')
@@ -125,6 +134,38 @@ export default function CheckoutPage() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  // Auto-focus first empty field on mobile for better UX
+  useEffect(() => {
+    if (!loading && !showPayment) {
+      // Check if we're on mobile (screen width < 768px)
+      const isMobile = window.innerWidth < 768
+      if (isMobile) {
+        // Focus on the first empty required field
+        if (!formData.email && emailRef.current) {
+          setTimeout(() => emailRef.current?.focus(), 100)
+        } else if (!formData.firstName && firstNameRef.current) {
+          setTimeout(() => firstNameRef.current?.focus(), 100)
+        } else if (!formData.lastName && lastNameRef.current) {
+          setTimeout(() => lastNameRef.current?.focus(), 100)
+        } else if (!formData.address && addressRef.current) {
+          setTimeout(() => addressRef.current?.focus(), 100)
+        } else if (!formData.city && cityRef.current) {
+          setTimeout(() => cityRef.current?.focus(), 100)
+        } else if (!formData.postalCode && postalCodeRef.current) {
+          setTimeout(() => postalCodeRef.current?.focus(), 100)
+        }
+      }
+    }
+  }, [loading, showPayment, formData])
+
+  // Handle Enter key to move to next field on mobile
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, nextRef: React.RefObject<HTMLInputElement>) => {
+    if (e.key === 'Enter' && window.innerWidth < 768) {
+      e.preventDefault()
+      nextRef.current?.focus()
+    }
   }
 
   const [clientSecret, setClientSecret] = useState<string>('')
@@ -294,13 +335,16 @@ export default function CheckoutPage() {
                           Email Address *
                         </label>
                         <input
+                          ref={emailRef}
                           type="email"
                           name="email"
                           required
                           value={formData.email}
                           onChange={handleInputChange}
+                          onKeyPress={(e) => handleKeyPress(e, firstNameRef)}
                           className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                           placeholder="your@email.com"
+                          autoComplete="email"
                         />
                       </div>
 
@@ -310,12 +354,15 @@ export default function CheckoutPage() {
                             First Name *
                           </label>
                           <input
+                            ref={firstNameRef}
                             type="text"
                             name="firstName"
                             required
                             value={formData.firstName}
                             onChange={handleInputChange}
+                            onKeyPress={(e) => handleKeyPress(e, lastNameRef)}
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                            autoComplete="given-name"
                           />
                         </div>
                         <div>
@@ -323,12 +370,15 @@ export default function CheckoutPage() {
                             Last Name *
                           </label>
                           <input
+                            ref={lastNameRef}
                             type="text"
                             name="lastName"
                             required
                             value={formData.lastName}
                             onChange={handleInputChange}
+                            onKeyPress={(e) => handleKeyPress(e, phoneRef)}
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                            autoComplete="family-name"
                           />
                         </div>
                       </div>
@@ -338,12 +388,15 @@ export default function CheckoutPage() {
                           Phone Number
                         </label>
                         <input
+                          ref={phoneRef}
                           type="tel"
                           name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
+                          onKeyPress={(e) => handleKeyPress(e, addressRef)}
                           className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                           placeholder="+49 123 456 7890"
+                          autoComplete="tel"
                         />
                       </div>
                     </div>
@@ -359,13 +412,16 @@ export default function CheckoutPage() {
                           Address *
                         </label>
                         <input
+                          ref={addressRef}
                           type="text"
                           name="address"
                           required
                           value={formData.address}
                           onChange={handleInputChange}
+                          onKeyPress={(e) => handleKeyPress(e, cityRef)}
                           className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                           placeholder="Street address"
+                          autoComplete="street-address"
                         />
                       </div>
 
@@ -375,12 +431,15 @@ export default function CheckoutPage() {
                             City *
                           </label>
                           <input
+                            ref={cityRef}
                             type="text"
                             name="city"
                             required
                             value={formData.city}
                             onChange={handleInputChange}
+                            onKeyPress={(e) => handleKeyPress(e, postalCodeRef)}
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                            autoComplete="address-level2"
                           />
                         </div>
                         <div>
@@ -388,12 +447,14 @@ export default function CheckoutPage() {
                             Postal Code *
                           </label>
                           <input
+                            ref={postalCodeRef}
                             type="text"
                             name="postalCode"
                             required
                             value={formData.postalCode}
                             onChange={handleInputChange}
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                            autoComplete="postal-code"
                           />
                         </div>
                       </div>
