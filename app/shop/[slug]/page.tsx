@@ -7,6 +7,7 @@ import { useCart } from '@/components/CartProvider'
 import { Header, Footer } from '@/components/ui/header'
 import { ProductReviews } from '@/components/ProductReviews'
 import { useToast } from '@/components/Toast'
+import { CartToast } from '@/components/CartToast'
 import { Container, Section } from '@/components/ui/layout'
 import { ScrollAnimation } from '@/components/ui/scroll-animations'
 import { Card, CardContent } from '@/components/ui/card'
@@ -49,6 +50,7 @@ export default function ProductPage({ params }: ProductPageProps) {
   const [isInWishlist, setIsInWishlist] = useState(false)
   const [wishlistLoading, setWishlistLoading] = useState(false)
   const [isZoomed, setIsZoomed] = useState(false)
+  const [showCartToast, setShowCartToast] = useState(false)
 
   const decodeHtmlEntities = (text: string) => {
     const textarea = document.createElement('textarea')
@@ -176,11 +178,8 @@ export default function ProductPage({ params }: ProductPageProps) {
       quantity
     })
     
-    success(
-      'Added to cart!',
-      `${quantity}x ${decodeHtmlEntities(product.title)} (${selectedVariant.size})`,
-      true
-    )
+    // Show the new cart toast instead of regular toast
+    setShowCartToast(true)
   }
 
   if (loading) {
@@ -360,11 +359,11 @@ export default function ProductPage({ params }: ProductPageProps) {
                       {product.type.toLowerCase().replace('_', ' ')}
                     </span>
                   </div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
+                  <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 leading-tight">
                     {decodeHtmlEntities(product.title)}
                   </h1>
                   {product.description && (
-                    <p className="text-gray-600 leading-relaxed">
+                    <p className="text-sm text-gray-600 leading-relaxed">
                       {decodeHtmlEntities(product.description)}
                     </p>
                   )}
@@ -373,38 +372,26 @@ export default function ProductPage({ params }: ProductPageProps) {
                 {/* Size Selection */}
                 {product.variants.length > 0 && (
                   <div className="bg-white border border-gray-50/50 rounded-xl p-5 shadow-sm">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Size Options</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-3">Size Options</h3>
+                    <select
+                      value={selectedVariant?.id || ''}
+                      onChange={(e) => {
+                        const variant = product.variants.find(v => v.id === e.target.value)
+                        if (variant) setSelectedVariant(variant)
+                      }}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-accent-coral focus:border-accent-coral"
+                    >
+                      <option value="" disabled>Select size...</option>
                       {product.variants.map((variant) => (
-                        <button
+                        <option
                           key={variant.id}
-                          onClick={() => setSelectedVariant(variant)}
+                          value={variant.id}
                           disabled={variant.stock === 0}
-                          className={`p-4 border rounded-lg text-sm font-medium transition-all duration-200 ${
-                            selectedVariant?.id === variant.id
-                              ? 'border-accent-coral bg-accent-coral text-white shadow-md'
-                              : variant.stock === 0
-                              ? 'border-gray-100 text-gray-400 cursor-not-allowed opacity-50'
-                              : 'border-gray-100 hover:border-accent-coral hover:shadow-sm text-gray-900'
-                          }`}
                         >
-                          <div className="font-semibold">{variant.size}</div>
-                          <div className="text-xs mt-1">
-                            {variant.stock === 0 
-                              ? 'Out of stock' 
-                              : (
-                                <>
-                                  <div>€{variant.price.toFixed(2)}</div>
-                                  <div className={variant.stock <= 5 ? 'text-red-400 font-medium' : selectedVariant?.id === variant.id ? 'text-white/80' : 'text-gray-500'}>
-                                    {variant.stock <= 5 && '⚠️ '}{variant.stock} left
-                                  </div>
-                                </>
-                              )
-                            }
-                          </div>
-                        </button>
+                          {variant.size} - €{variant.price.toFixed(2)} ({variant.stock === 0 ? 'Out of stock' : `${variant.stock} left`})
+                        </option>
                       ))}
-                    </div>
+                    </select>
                   </div>
                 )}
 
@@ -414,7 +401,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <label className="block text-sm font-medium text-gray-900 mb-2">
+                          <label className="block text-xs font-medium text-gray-900 mb-2">
                             Quantity
                           </label>
                           <select
@@ -508,6 +495,17 @@ export default function ProductPage({ params }: ProductPageProps) {
       </Section>
 
       <Footer />
+      
+      {/* Cart Toast */}
+      {product && selectedVariant && (
+        <CartToast
+          isOpen={showCartToast}
+          onClose={() => setShowCartToast(false)}
+          productName={decodeHtmlEntities(product.title)}
+          productSize={selectedVariant.size}
+          quantity={quantity}
+        />
+      )}
     </main>
   )
 }
