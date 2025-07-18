@@ -8,7 +8,7 @@ import { Container, Section, Grid } from '@/components/ui/layout'
 import { ScrollAnimation } from '@/components/ui/scroll-animations'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Filter, X } from 'lucide-react'
 
 interface Product {
   id: string
@@ -36,6 +36,7 @@ export default function Shop() {
     sizes: [],
     priceRanges: []
   })
+  const [showMobileFilters, setShowMobileFilters] = useState(false)
 
   useEffect(() => {
     fetchProducts()
@@ -182,8 +183,8 @@ export default function Shop() {
       <Section>
         <Container>
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Filters Sidebar */}
-            <aside className="lg:w-64">
+            {/* Desktop Filters Sidebar */}
+            <aside className="hidden lg:block lg:w-64">
               <ScrollAnimation animation="slideLeft">
                 <div className="p-6 sticky top-8">
                   <FilterBar onFilterChange={handleFilterChange} products={products} />
@@ -191,11 +192,40 @@ export default function Shop() {
               </ScrollAnimation>
             </aside>
 
+            {/* Mobile Filters Modal */}
+            {showMobileFilters && (
+              <div className="fixed inset-0 bg-black/50 z-50 lg:hidden">
+                <div className="absolute inset-y-0 left-0 w-80 max-w-[85vw] bg-white overflow-y-auto">
+                  <div className="p-4 border-b flex justify-between items-center">
+                    <h2 className="text-lg font-semibold">Filters</h2>
+                    <button
+                      onClick={() => setShowMobileFilters(false)}
+                      className="p-2 hover:bg-gray-100 rounded-lg"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <FilterBar onFilterChange={handleFilterChange} products={products} />
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Products Grid */}
             <div className="flex-1">
                 {/* Header with sorting */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-4">
+                    {/* Mobile Filter Button */}
+                    <button
+                      onClick={() => setShowMobileFilters(true)}
+                      className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <Filter className="w-4 h-4" />
+                      <span className="text-sm font-medium">Filters</span>
+                    </button>
+                    
                     <span className="body-elegant text-neutral-gray">
                       {filteredProducts.length} products found
                     </span>

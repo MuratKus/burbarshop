@@ -15,8 +15,7 @@
 - [x] Fix cart updated pop-up that shows customer x item got adjusted due to inventory - quote fails
 - [x] Fix quick add on /shop still has old toast notification - should use new CartToast
 - [x] Fix toast notification for item added to cart - should be top right and not block interactions
-
-*All high-priority tasks completed again!*
+- [ ] Fix mobile filters UI - collapse filters on mobile so products are visible first, not hidden behind filter sidebar
 
 ## Medium Priority 🔶
 - [ ] Extract and implement reviews system using Etsy API - use curl to fetch real review data and implement reviews panel from screenshot
@@ -29,6 +28,7 @@
 - [ ] Fix cart page footer positioning on large screens when empty - anchor footer to bottom
 - [ ] Update homepage and about page customer counts with real-life values
 - [ ] Add Instagram profile links throughout the site
+- [ ] Add Playwright MCP integration and create comprehensive UI tests for critical user flows (cart, checkout, product pages)
 
 ---
 *Last updated: 2025-01-18*

@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Button } from '@/components/Button'
-import { Navigation } from '@/components/Navigation'
+import { Button } from '@/components/ui/button'
+import { Header, Footer } from '@/components/ui/header'
 import { useCart } from '@/components/CartProvider'
 import { StripeProvider } from '@/components/StripeProvider'
 import { StripePaymentForm } from '@/components/StripePaymentForm'
@@ -290,7 +290,7 @@ export default function CheckoutPage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-white">
-        <Navigation />
+        <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="flex justify-center items-center h-64">
             <div className="text-lg text-gray-600">Loading checkout...</div>
@@ -302,7 +302,7 @@ export default function CheckoutPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <Navigation />
+      <Header />
 
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
