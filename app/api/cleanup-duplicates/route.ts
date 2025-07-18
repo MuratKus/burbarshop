@@ -25,11 +25,15 @@ export async function POST(request: Request) {
     console.log('🧹 Starting duplicate cleanup...')
     
     // Find products with Etsy URLs (the duplicates we want to remove)
+    // Check for various Etsy patterns
     const etsyProducts = await prisma.product.findMany({
       where: {
-        images: {
-          contains: 'etsystatic'
-        }
+        OR: [
+          { images: { contains: 'etsystatic' } },
+          { images: { contains: 'etsy.com' } },
+          { images: { contains: 'i.etsystatic.com' } },
+          { images: { contains: 'https://i.etsystatic.com' } }
+        ]
       },
       include: {
         variants: true
@@ -104,9 +108,12 @@ export async function GET() {
     const totalProducts = await prisma.product.count()
     const etsyProducts = await prisma.product.count({
       where: {
-        images: {
-          contains: 'etsystatic'
-        }
+        OR: [
+          { images: { contains: 'etsystatic' } },
+          { images: { contains: 'etsy.com' } },
+          { images: { contains: 'i.etsystatic.com' } },
+          { images: { contains: 'https://i.etsystatic.com' } }
+        ]
       }
     })
     
