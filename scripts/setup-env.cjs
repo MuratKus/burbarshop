@@ -5,20 +5,26 @@ const path = require('path')
 
 console.log('🔧 Setting up environment-specific configuration...\n')
 
-// Check if we're in Vercel deployment
+// Check if we're in Vercel deployment or CI
 const isVercel = process.env.VERCEL === '1'
 const isProduction = process.env.NODE_ENV === 'production'
 const isPreview = process.env.VERCEL_ENV === 'preview'
+const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true'
 
 console.log('Environment detected:')
 console.log(`- VERCEL: ${isVercel}`)
 console.log(`- NODE_ENV: ${process.env.NODE_ENV}`)
 console.log(`- VERCEL_ENV: ${process.env.VERCEL_ENV}`)
+console.log(`- CI: ${isCI}`)
 
 // Determine which DATABASE_URL to use
 let databaseUrl
 
-if (isVercel) {
+if (isCI) {
+  // In CI (GitHub Actions), use a mock database URL for testing
+  databaseUrl = 'postgresql://test:test@localhost:5432/test_db'
+  console.log('\n✅ Using CI test database configuration')
+} else if (isVercel) {
   // In Vercel (production/preview), use Neon's DATABASE_DATABASE_URL
   databaseUrl = process.env.DATABASE_DATABASE_URL || process.env.DATABASE_POSTGRES_URL
   console.log('\n✅ Using Vercel/Neon database configuration')
