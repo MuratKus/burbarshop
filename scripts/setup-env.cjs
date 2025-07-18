@@ -31,9 +31,11 @@ if (isVercel) {
     databaseUrl = process.env.DATABASE_DATABASE_URL
     console.log('\n✅ Using pulled Neon DATABASE_DATABASE_URL for local development')
   } else {
-    // Fallback to SQLite for local development
-    databaseUrl = 'file:./dev.db'
-    console.log('\n⚠️  No database URL found, falling back to SQLite (dev.db)')
+    // No fallback - require proper database configuration
+    console.log('\n❌ No PostgreSQL database URL found!')
+    console.log('   Please ensure DATABASE_URL is set in .env.local')
+    console.log('   Expected format: postgres://user:password@host:port/database')
+    process.exit(1)
   }
 }
 
