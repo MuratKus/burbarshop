@@ -60,7 +60,10 @@ export default function ProductPage({ params }: ProductPageProps) {
     if (!product) return
     const images = JSON.parse(product.images || '[]')
     const videos = JSON.parse(product.videos || '[]')
-    const allMedia = [...images.map(url => ({ type: 'image', url })), ...videos.map(video => ({ type: 'video', ...video }))]
+    const allMedia = [
+      ...images.map(url => ({ type: 'image', url })), 
+      ...videos.map(videoUrl => ({ type: 'video', url: videoUrl }))
+    ]
     setSelectedImageIndex((prev) => (prev + 1) % allMedia.length)
   }
 
@@ -68,7 +71,10 @@ export default function ProductPage({ params }: ProductPageProps) {
     if (!product) return
     const images = JSON.parse(product.images || '[]')
     const videos = JSON.parse(product.videos || '[]')
-    const allMedia = [...images.map(url => ({ type: 'image', url })), ...videos.map(video => ({ type: 'video', ...video }))]
+    const allMedia = [
+      ...images.map(url => ({ type: 'image', url })), 
+      ...videos.map(videoUrl => ({ type: 'video', url: videoUrl }))
+    ]
     setSelectedImageIndex((prev) => (prev - 1 + allMedia.length) % allMedia.length)
   }
 
@@ -250,7 +256,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                       {allMedia[selectedImageIndex]?.type === 'video' ? (
                         <video 
                           src={allMedia[selectedImageIndex].url}
-                          poster={allMedia[selectedImageIndex].thumbnail}
                           className="w-full h-full object-cover"
                           controls
                           muted
@@ -322,10 +327,11 @@ export default function ProductPage({ params }: ProductPageProps) {
                       >
                         {media.type === 'video' ? (
                           <>
-                            <img 
-                              src={media.thumbnail || media.url} 
-                              alt={`${decodeHtmlEntities(product.title)} video ${index + 1}`}
+                            <video 
+                              src={media.url} 
                               className="w-full h-full object-cover"
+                              muted
+                              preload="metadata"
                             />
                             <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                               <span className="text-white text-xs">▶️</span>
