@@ -26,16 +26,17 @@ model User {
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  description String?
-  images      String   // JSON string array of image URLs
-  videos      String?  // JSON string array of video objects {url, thumbnail, type}
-  basePrice   Float
-  type        String   // "POSTCARD", "FINE_PRINT", "RISO_PRINT"
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  title         String
+  slug          String   @unique
+  description   String?
+  images        String   // JSON string array of image URLs
+  videos        String?  // JSON string array of video objects {url, thumbnail, type}
+  basePrice     Float
+  type          String   // "POSTCARD", "FINE_PRINT", "RISO_PRINT"
+  etsyListingId String?  // Etsy listing ID for fetching additional images/videos
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   
   variants    ProductVariant[]
   orderItems  OrderItem[]
