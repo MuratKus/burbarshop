@@ -6,78 +6,55 @@ import { ArtworkCarousel } from '@/components/ui/artwork-carousel'
 import { NewsletterSignup } from '@/components/ui/newsletter-signup'
 import { ScrollAnimation, StaggeredAnimation } from '@/components/ui/scroll-animations'
 import { Section, Container } from '@/components/ui/layout'
+import { useEffect, useState } from 'react'
 
-// Sample featured artwork data
-const featuredArtworks = [
-  {
-    id: '1',
-    title: 'Botanical Dreams',
-    type: 'Fine Print',
-    price: 35.00,
-    image: '/uploads/1752460263172-yix1ot.png',
-    slug: 'botanical-dreams',
-    description: 'Nature-inspired artwork featuring delicate botanical illustrations',
-    isNew: true,
-    isFeatured: true
-  },
-  {
-    id: '2',
-    title: 'Abstract Expressions',
-    type: 'Riso Print',
-    price: 28.00,
-    image: '/uploads/1752496904123-b57whi.png',
-    slug: 'abstract-expressions',
-    description: 'Bold abstract compositions in vibrant colors',
-    isNew: false,
-    isFeatured: true
-  },
-  {
-    id: '3',
-    title: 'Vintage Postcards',
-    type: 'Postcard',
-    price: 15.00,
-    image: '/uploads/1752460263172-yix1ot.png',
-    slug: 'vintage-postcards',
-    description: 'Nostalgic postcard designs with classic charm',
-    isNew: false,
-    isFeatured: true
-  },
-  {
-    id: '4',
-    title: 'Urban Landscapes',
-    type: 'Fine Print',
-    price: 42.00,
-    image: '/uploads/1752496904123-b57whi.png',
-    slug: 'urban-landscapes',
-    description: 'Contemporary cityscapes and architectural studies',
-    isNew: true,
-    isFeatured: false
-  },
-  {
-    id: '5',
-    title: 'Minimalist Geometry',
-    type: 'Riso Print',
-    price: 32.00,
-    image: '/uploads/1752460263172-yix1ot.png',
-    slug: 'minimalist-geometry',
-    description: 'Clean geometric patterns with subtle color palettes',
-    isNew: false,
-    isFeatured: true
-  },
-  {
-    id: '6',
-    title: 'Watercolor Studies',
-    type: 'Fine Print',
-    price: 38.00,
-    image: '/uploads/1752496904123-b57whi.png',
-    slug: 'watercolor-studies',
-    description: 'Soft watercolor paintings capturing light and movement',
-    isNew: false,
-    isFeatured: false
-  }
-]
+interface FeaturedArtwork {
+  id: string
+  title: string
+  type: string
+  price: number
+  image: string
+  slug: string
+  description: string
+  isNew: boolean
+  isFeatured: boolean
+}
 
 export default function Home() {
+  const [featuredArtworks, setFeaturedArtworks] = useState<FeaturedArtwork[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        const response = await fetch('/api/products?featured=true&limit=6')
+        const data = await response.json()
+        
+        // Transform products to match the expected format
+        const transformedProducts = data.products?.slice(0, 6).map((product: any, index: number) => ({
+          id: product.id,
+          title: product.title,
+          type: product.type.replace('_', ' '),
+          price: product.basePrice,
+          image: product.images?.[0] || '/images/placeholder.jpg',
+          slug: product.slug,
+          description: product.description || 'Beautiful artwork by Burcinbar',
+          isNew: index < 2, // Mark first 2 as new
+          isFeatured: true
+        })) || []
+        
+        setFeaturedArtworks(transformedProducts)
+      } catch (error) {
+        console.error('Error fetching featured products:', error)
+        // Fallback to a few items if API fails
+        setFeaturedArtworks([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchFeaturedProducts()
+  }, [])
   return (
     <main className="public-layout">
       <Header />
@@ -91,14 +68,36 @@ export default function Home() {
 
       {/* Featured Artwork Carousel */}
       <ScrollAnimation animation="fadeIn">
-        <ArtworkCarousel
-          artworks={featuredArtworks}
-          title="Featured Artwork"
-          subtitle="Discover our latest collection of handcrafted prints and postcards"
-          autoPlay={true}
-          autoPlayInterval={6000}
-          itemsPerView={3}
-        />
+        {loading ? (
+          <Section className="bg-primary-cream">
+            <Container>
+              <div className="text-center py-12">
+                <div className="animate-pulse">
+                  <div className="h-8 bg-primary-sage/20 rounded w-48 mx-auto mb-4"></div>
+                  <div className="h-4 bg-primary-sage/20 rounded w-64 mx-auto mb-8"></div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="bg-white rounded-xl p-4">
+                        <div className="aspect-square bg-primary-sage/20 rounded-lg mb-4"></div>
+                        <div className="h-4 bg-primary-sage/20 rounded w-3/4 mb-2"></div>
+                        <div className="h-4 bg-primary-sage/20 rounded w-1/2"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Container>
+          </Section>
+        ) : (
+          <ArtworkCarousel
+            artworks={featuredArtworks}
+            title="Featured Artwork"
+            subtitle="Discover our latest collection of handcrafted prints and postcards"
+            autoPlay={true}
+            autoPlayInterval={6000}
+            itemsPerView={3}
+          />
+        )}
       </ScrollAnimation>
 
       {/* About Section */}
@@ -111,17 +110,17 @@ export default function Home() {
                   Handcrafted with Love
                 </h2>
                 <p className="body-elegant text-lg text-neutral-gray leading-relaxed">
-                  Every piece in our collection is carefully created using traditional techniques 
-                  combined with contemporary aesthetics. From botanical studies to abstract 
-                  compositions, each artwork tells a unique story.
+                  Every piece in our collection celebrates cultural heritage and artistic expression. 
+                  From traditional dance illustrations to historical portraits, each artwork is 
+                  created with love and attention to detail using riso printing techniques.
                 </p>
                 <div className="grid grid-cols-2 gap-6">
                   <div className="text-center p-4">
-                    <div className="text-2xl font-bold text-accent-coral mb-2">150+</div>
+                    <div className="text-2xl font-bold text-accent-coral mb-2">24+</div>
                     <div className="text-sm text-neutral-gray">Unique Designs</div>
                   </div>
                   <div className="text-center p-4">
-                    <div className="text-2xl font-bold text-accent-coral mb-2">500+</div>
+                    <div className="text-2xl font-bold text-accent-coral mb-2">100+</div>
                     <div className="text-sm text-neutral-gray">Happy Customers</div>
                   </div>
                 </div>

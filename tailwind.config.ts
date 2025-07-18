@@ -9,19 +9,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Professional color palette from CLAUDE.md
+        // Enhanced color palette inspired by artwork
         primary: {
           sage: '#B8C5B0',
           cream: '#F8F6F1',
           charcoal: '#2C2C2C',
+          warm: '#F5F1E8', // Warmer cream for cards
         },
         accent: {
           coral: '#E85A4F',
           navy: '#1E3A8A',
+          terracotta: '#C44536', // Deeper coral for highlights
+          ochre: '#CC8A5B', // Warm earth tone
         },
         neutral: {
           gray: '#6B7280',
           'border-light': '#E5E7EB',
+          'warm-gray': '#8B7355', // Warmer gray tone
         },
         admin: {
           sidebar: '#1F2937',

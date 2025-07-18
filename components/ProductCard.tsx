@@ -81,8 +81,8 @@ export function ProductCard({
 
   return (
     <div className={`product-card group ${className || ''}`}>
-      {/* Card with white border and improved styling */}
-      <div className="bg-white border border-gray-100/20 rounded-xl p-3 shadow-sm hover:shadow-md transition-all duration-300 group-hover:border-gray-100/40">
+      {/* Enhanced card with better visual distinction */}
+      <div className="bg-primary-warm border border-neutral-border-light/40 rounded-xl p-4 shadow-elegant hover:shadow-elegant-hover transition-all duration-300 group-hover:border-accent-ochre/50 group-hover:bg-white group-hover:scale-[1.02]">
         <div className="relative">
           <Link href={`/shop/${slug}`}>
           <div className="relative aspect-square rounded-lg mb-3 overflow-hidden bg-primary-cream">
@@ -142,9 +142,9 @@ export function ProductCard({
               </h3>
             </Link>
             
-            {/* Product type badge with better spacing */}
+            {/* Product type badge with brand colors */}
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-50/70 text-gray-600">
+              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-primary-sage/20 text-primary-charcoal/80">
                 {formatType(type)}
               </span>
               {isOutOfStock && (
