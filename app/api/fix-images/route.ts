@@ -3,6 +3,17 @@ import { PrismaClient } from '@prisma/client'
 import fs from 'fs'
 import path from 'path'
 
+// Ensure DATABASE_URL is set from available environment variables
+if (!process.env.DATABASE_URL) {
+  if (process.env.DATABASE_DATABASE_URL) {
+    process.env.DATABASE_URL = process.env.DATABASE_DATABASE_URL
+  } else if (process.env.DATABASE_POSTGRES_URL) {
+    process.env.DATABASE_URL = process.env.DATABASE_POSTGRES_URL
+  } else if (process.env.DATABASE_POSTGRES_PRISMA_URL) {
+    process.env.DATABASE_URL = process.env.DATABASE_POSTGRES_PRISMA_URL
+  }
+}
+
 const prisma = new PrismaClient()
 
 // Helper function to generate slug
