@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
-import { Button } from './Button'
+import { Button } from './ui/button'
 import { useCart } from './CartProvider'
 import { useToast } from './Toast'
 import { CartToast } from './CartToast'
@@ -13,10 +13,12 @@ interface ProductCardProps {
   id: string
   slug: string
   title: string
+  description?: string
   type: string
   basePrice: number
   image?: string
   className?: string
+  size?: 'large' | 'small'
   variants?: Array<{
     id: string
     size: string
@@ -34,10 +36,12 @@ export function ProductCard({
   id, 
   slug,
   title, 
+  description,
   type, 
   basePrice, 
   image, 
   className,
+  size = 'large',
   variants 
 }: ProductCardProps) {
   const totalStock = variants?.reduce((sum, variant) => sum + variant.stock, 0) || 0
@@ -84,11 +88,15 @@ export function ProductCard({
 
   return (
     <div className={`product-card group ${className || ''}`}>
-      {/* Enhanced card with subtle borders */}
-      <div className="bg-primary-warm border border-neutral-border-light/20 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300 group-hover:border-accent-ochre/30 group-hover:bg-white group-hover:scale-[1.01]">
+      {/* Enhanced card with subtle borders - size responsive */}
+      <div className={`bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:border-orange-200 hover:scale-[1.01] ${
+        size === 'large' ? 'p-4' : 'p-3'
+      }`}>
         <div className="relative">
           <Link href={`/shop/${slug}`}>
-          <div className="relative aspect-square rounded-lg mb-3 overflow-hidden bg-primary-cream">
+          <div className={`relative aspect-square rounded-lg overflow-hidden bg-gray-50 ${
+            size === 'large' ? 'mb-3' : 'mb-2'
+          }`}>
             {image ? (
               <Image
                 src={image}
@@ -137,17 +145,21 @@ export function ProductCard({
         </Link>
         </div>
         
-        <div className="space-y-2 px-1">
+        <div className={size === 'large' ? 'space-y-2 px-1' : 'space-y-1'}>
           <div className="space-y-1">
             <Link href={`/shop/${slug}`}>
-              <h3 className="text-sm font-medium text-gray-900 group-hover:text-accent-coral transition-colors line-clamp-2 leading-relaxed">
+              <h3 className={`font-medium text-gray-900 hover:text-orange-600 transition-colors line-clamp-2 leading-relaxed ${
+                size === 'large' ? 'text-sm' : 'text-xs'
+              }`}>
                 {decodeHtmlEntities(title)}
               </h3>
             </Link>
             
             {/* Product type badge with brand colors */}
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-primary-sage/20 text-primary-charcoal/80">
+              <span className={`inline-flex items-center rounded-md font-medium bg-gray-100 text-gray-700 ${
+                size === 'large' ? 'px-2 py-1 text-xs' : 'px-1 py-0.5 text-xs'
+              }`}>
                 {formatType(type)}
               </span>
               {isOutOfStock && (
@@ -159,14 +171,18 @@ export function ProductCard({
           </div>
           
           <div className="flex items-center justify-between pt-1">
-            <p className="text-lg font-semibold text-gray-900">
+            <p className={`font-semibold text-gray-900 ${
+              size === 'large' ? 'text-lg' : 'text-sm'
+            }`}>
               {formatPrice(basePrice)}
             </p>
             <Button 
               variant="outline" 
               size="sm"
               disabled={isOutOfStock}
-              className={`opacity-0 group-hover:opacity-100 transition-all duration-200 text-xs h-7 px-2 border-gray-200 hover:border-accent-coral hover:text-accent-coral ${
+              className={`opacity-0 group-hover:opacity-100 transition-all duration-200 border-gray-200 hover:border-orange-500 hover:text-orange-600 ${
+                size === 'large' ? 'text-xs h-7 px-2' : 'text-xs h-6 px-1.5'
+              } ${
                 isOutOfStock ? 'cursor-not-allowed opacity-50' : ''
               }`}
               onClick={(e) => {

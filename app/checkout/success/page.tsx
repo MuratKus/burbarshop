@@ -3,24 +3,31 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { Button } from '@/components/Button'
-import { Navigation } from '@/components/Navigation'
+import { Button } from '@/components/ui/button'
+import { Header } from '@/components/ui/header'
+import { useCart } from '@/components/CartProvider'
 
 function CheckoutSuccessContent() {
   const searchParams = useSearchParams()
+  const { clearCart } = useCart()
   const orderId = searchParams.get('order_id')
   const paymentIntentId = searchParams.get('payment_intent')
+  const shouldClearCart = searchParams.get('clear_cart')
   const [orderDetails, setOrderDetails] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
-
   useEffect(() => {
+    // Clear cart if coming from successful checkout
+    if (shouldClearCart === 'true') {
+      clearCart()
+    }
+    
     if (orderId) {
       fetchOrderDetails()
     } else {
       setLoading(false)
     }
-  }, [orderId])
+  }, [orderId, shouldClearCart, clearCart])
 
   const fetchOrderDetails = async () => {
     try {
@@ -39,7 +46,7 @@ function CheckoutSuccessContent() {
   if (loading) {
     return (
       <main className="min-h-screen bg-orange-50">
-        <Navigation />
+        <Header />
         <div className="container mx-auto px-4 py-8">
           <div className="flex justify-center items-center h-64">
             <div className="text-center">
@@ -59,7 +66,7 @@ function CheckoutSuccessContent() {
 
   return (
     <main className="min-h-screen bg-orange-50">
-      <Navigation />
+      <Header />
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
