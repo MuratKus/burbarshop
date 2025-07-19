@@ -1,36 +1,37 @@
+// SendGrid Template IDs
+const SENDGRID_TEMPLATES = {
+  ORDER_CONFIRMATION: 'd-74e1fd2cc7d7462f8723a9ed0bc87fa8',
+  NEWSLETTER: 'd-11506f6b042f48b7b6674a5a95d73c50',
+  SHIPPING_NOTIFICATION: '', // Add when you create this template
+}
+
 export interface EmailData {
   to: string
   subject: string
-  html: string
+  html?: string
+  templateId?: string
+  dynamicTemplateData?: any
 }
 
 export async function sendEmail(data: EmailData): Promise<boolean> {
   try {
-    // Check if Resend is configured (preferred) or SendGrid fallback
-    if (process.env.RESEND_API_KEY && process.env.EMAIL_FROM) {
-      // Resend integration (preferred)
-      const { Resend } = await import('resend')
-      const resend = new Resend(process.env.RESEND_API_KEY)
-      
-      const result = await resend.emails.send({
-        from: process.env.EMAIL_FROM,
-        to: data.to,
-        subject: data.subject,
-        html: data.html,
-      })
-      
-      console.log('✅ Email sent successfully via Resend to:', data.to)
-      return true
-    } else if (process.env.SENDGRID_API_KEY && process.env.EMAIL_FROM) {
-      // SendGrid fallback
+    if (process.env.SENDGRID_API_KEY && process.env.EMAIL_FROM) {
+      // SendGrid with dynamic templates
       const sgMail = await import('@sendgrid/mail')
       sgMail.setApiKey(process.env.SENDGRID_API_KEY)
       
-      const msg = {
+      const msg: any = {
         to: data.to,
         from: process.env.EMAIL_FROM,
-        subject: data.subject,
-        html: data.html,
+      }
+
+      // Use dynamic template if provided, otherwise use HTML
+      if (data.templateId && data.dynamicTemplateData) {
+        msg.templateId = data.templateId
+        msg.dynamicTemplateData = data.dynamicTemplateData
+      } else {
+        msg.subject = data.subject
+        msg.html = data.html
       }
       
       await sgMail.send(msg)
@@ -40,8 +41,13 @@ export async function sendEmail(data: EmailData): Promise<boolean> {
       // No email service configured - log what would be sent
       console.log('📧 Email would be sent (No email service configured):')
       console.log('To:', data.to)
-      console.log('Subject:', data.subject)
-      console.log('HTML:', data.html.substring(0, 200) + '...')
+      console.log('Subject:', data.subject || 'Template Email')
+      if (data.templateId) {
+        console.log('Template ID:', data.templateId)
+        console.log('Template Data:', JSON.stringify(data.dynamicTemplateData, null, 2))
+      } else {
+        console.log('HTML:', data.html?.substring(0, 200) + '...')
+      }
       return true
     }
   } catch (error) {
@@ -50,6 +56,83 @@ export async function sendEmail(data: EmailData): Promise<boolean> {
   }
 }
 
+// Send order confirmation email using dynamic template
+export async function sendOrderConfirmationEmail(order: any): Promise<boolean> {
+  try {
+    const shippingAddress = JSON.parse(order.shippingAddress)
+    
+    const templateData = {
+      order_number: `#${order.id.slice(-8).toUpperCase()}`,
+      order_date: new Date(order.createdAt).toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      }),
+      customer_name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
+      shipping_address: shippingAddress.address,
+      shipping_city: shippingAddress.city,
+      shipping_postal: shippingAddress.postalCode,
+      shipping_country: shippingAddress.country,
+      shipping_phone: shippingAddress.phone || '',
+      items: order.items.map((item: any) => ({
+        title: item.product.title,
+        size: item.productVariant.size,
+        quantity: item.quantity,
+        item_total: (item.quantity * item.price).toFixed(2)
+      })),
+      subtotal: order.subtotal.toFixed(2),
+      shipping_cost: order.shippingCost.toFixed(2),
+      free_shipping: order.shippingCost === 0,
+      total: order.total.toFixed(2),
+      track_order_url: `${process.env.NEXTAUTH_URL || 'https://burbarshop.com'}/orders/${order.id}`,
+      shop_url: `${process.env.NEXTAUTH_URL || 'https://burbarshop.com'}/shop`
+    }
+    
+    return await sendEmail({
+      to: order.email,
+      templateId: SENDGRID_TEMPLATES.ORDER_CONFIRMATION,
+      dynamicTemplateData: templateData
+    })
+  } catch (error) {
+    console.error('❌ Order confirmation email error:', error)
+    return false
+  }
+}
+
+// Send newsletter email using dynamic template
+export async function sendNewsletterEmail(
+  to: string, 
+  newsletterData: {
+    newsletter_title: string
+    newsletter_subtitle: string
+    main_message: string
+    featured_artwork?: any
+    new_arrivals?: any[]
+    special_offer?: any
+    behind_scenes?: string
+  }
+): Promise<boolean> {
+  try {
+    const templateData = {
+      ...newsletterData,
+      website_url: process.env.NEXTAUTH_URL || 'https://burbarshop.com',
+      unsubscribe_url: `${process.env.NEXTAUTH_URL || 'https://burbarshop.com'}/unsubscribe`,
+      preferences_url: `${process.env.NEXTAUTH_URL || 'https://burbarshop.com'}/email-preferences`
+    }
+    
+    return await sendEmail({
+      to,
+      templateId: SENDGRID_TEMPLATES.NEWSLETTER,
+      dynamicTemplateData: templateData
+    })
+  } catch (error) {
+    console.error('❌ Newsletter email error:', error)
+    return false
+  }
+}
+
+// Legacy function for backward compatibility
 export function generateOrderConfirmationEmail(order: any): string {
   const shippingAddress = JSON.parse(order.shippingAddress)
   
