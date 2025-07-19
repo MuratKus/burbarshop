@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, Suspense } from 'react'
+import { useEffect, useState, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -8,8 +8,10 @@ import { Header, Footer } from '@/components/ui/header'
 import { useCart } from '@/components/CartProvider'
 import { Container, Section } from '@/components/ui/layout'
 import { ScrollAnimation } from '@/components/ui/scroll-animations'
+import { useClientLogger } from '@/lib/client-logger'
 
 function CheckoutSuccessContent() {
+  const logger = useClientLogger('CheckoutSuccessContent')
   const searchParams = useSearchParams()
   const { clearCart } = useCart()
   const orderId = searchParams?.get('order_id')
@@ -20,42 +22,65 @@ function CheckoutSuccessContent() {
   const [cartCleared, setCartCleared] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [fetchAttempted, setFetchAttempted] = useState(false)
+  const fetchingRef = useRef(false)
+  
+  logger.info('Component rendered', { orderId, shouldClearCart, loading, cartCleared, fetchAttempted })
 
   useEffect(() => {
+    logger.debug('useEffect triggered', { orderId, shouldClearCart, cartCleared, fetchAttempted })
+    
     // Clear cart if coming from successful checkout (only once)
     if (shouldClearCart === 'true' && !cartCleared) {
+      logger.info('Clearing cart')
       clearCart()
       setCartCleared(true)
     }
     
     // Only attempt to fetch order details once
     if (orderId && !fetchAttempted) {
+      logger.info('Starting order fetch', { orderId })
       setFetchAttempted(true)
       fetchOrderDetails()
     } else if (!orderId) {
+      logger.warn('No orderId provided')
       setLoading(false)
     }
-  }, [orderId, shouldClearCart, cartCleared, fetchAttempted]) // Include fetchAttempted to prevent infinite loops
+  }, [orderId, shouldClearCart, cartCleared, fetchAttempted, clearCart]) // Include all dependencies
 
   const fetchOrderDetails = async () => {
+    if (fetchingRef.current) {
+      logger.warn('Fetch already in progress, skipping')
+      return // Prevent concurrent calls
+    }
+    
+    fetchingRef.current = true
+    const startTime = Date.now()
+    
     try {
-      console.log('Fetching order details for ID:', orderId)
+      logger.info('Starting API call', { orderId })
       const response = await fetch(`/api/orders/${orderId}`)
+      const duration = Date.now() - startTime
+      
+      logger.info('API response received', { status: response.status, duration })
       
       if (response.ok) {
         const data = await response.json()
+        logger.info('Order data loaded successfully', { orderData: data })
         setOrderDetails(data)
         setError(null)
       } else {
         const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
-        console.error('API error response:', response.status, errorData)
+        logger.error('API error response', { status: response.status, errorData })
         setError(`Failed to load order details: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
-      console.error('Network error fetching order details:', error)
+      const duration = Date.now() - startTime
+      logger.error('Network error', { error: error.message, stack: error.stack, duration })
       setError('Unable to connect to server. Please check your internet connection and try again.')
     } finally {
       setLoading(false)
+      fetchingRef.current = false
+      logger.info('Fetch completed')
     }
   }
 

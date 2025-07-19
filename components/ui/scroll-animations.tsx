@@ -381,18 +381,28 @@ export function FloatingElement({
   const elementRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
+    let animationFrame: number
     const startTime = Date.now()
+    let isActive = true
     
     const animate = () => {
+      if (!isActive) return // Stop if component unmounted
+      
       const elapsed = (Date.now() - startTime) / 1000
       const newOffset = Math.sin(elapsed * speed) * amplitude
       setOffset(newOffset)
       
-      requestAnimationFrame(animate)
+      animationFrame = requestAnimationFrame(animate)
     }
 
-    const animationFrame = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(animationFrame)
+    animationFrame = requestAnimationFrame(animate)
+    
+    return () => {
+      isActive = false
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame)
+      }
+    }
   }, [amplitude, speed])
 
   return (
