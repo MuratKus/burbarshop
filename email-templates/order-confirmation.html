@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmation - Burcinbar</title>
+</head>
+<body style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fafafa; color: #2c3e50;">
+  
+  <!-- Header with Branding -->
+  <div style="text-align: center; margin-bottom: 30px; padding: 30px; background: linear-gradient(135deg, #7c9885 0%, #6b8473 100%); border-radius: 12px;">
+    <div style="display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; background-color: white; border-radius: 50%; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+      <span style="color: #7c9885; font-weight: bold; font-size: 28px;">B</span>
+    </div>
+    <h1 style="color: white; margin: 0; font-size: 32px; font-weight: 300; letter-spacing: 1px;">Order Confirmed!</h1>
+    <p style="color: rgba(255,255,255,0.9); margin: 15px 0 0 0; font-size: 18px; font-weight: 300;">Thank you for supporting independent art ✨</p>
+  </div>
+  
+  <!-- Order Details Card -->
+  <div style="background-color: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <h2 style="color: #2c3e50; margin-bottom: 25px; font-size: 24px; font-weight: 300; border-bottom: 2px solid #7c9885; padding-bottom: 10px;">Order Summary</h2>
+    
+    <div style="background-color: #f8fffe; padding: 20px; border-radius: 8px; border-left: 4px solid #7c9885; margin-bottom: 25px;">
+      <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+        <span style="color: #666; font-weight: 500;">Order Number:</span>
+        <span style="color: #7c9885; font-weight: bold; font-size: 16px;">{{order_number}}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+        <span style="color: #666; font-weight: 500;">Date:</span>
+        <span style="color: #2c3e50;">{{order_date}}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+        <span style="color: #666; font-weight: 500;">Status:</span>
+        <span style="background-color: #7c9885; color: white; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase;">Confirmed</span>
+      </div>
+    </div>
+    
+    <!-- Items Section -->
+    <h3 style="color: #2c3e50; margin: 25px 0 15px 0; font-size: 18px; font-weight: 500;">Your Beautiful Art Pieces</h3>
+    
+    {{#each items}}
+    <div style="border-bottom: 1px solid #f0f0f0; padding: 20px 0; display: flex; justify-content: space-between; align-items: center;">
+      <div style="flex: 1;">
+        <h4 style="margin: 0 0 8px 0; font-weight: 600; color: #2c3e50; font-size: 16px;">{{title}}</h4>
+        <p style="margin: 0; color: #666; font-size: 14px;">{{size}} • Quantity: {{quantity}}</p>
+        <p style="margin: 5px 0 0 0; color: #888; font-size: 12px; font-style: italic;">Handcrafted with love ❤️</p>
+      </div>
+      <div style="text-align: right; margin-left: 20px;">
+        <p style="margin: 0; font-weight: 700; color: #7c9885; font-size: 18px;">€{{item_total}}</p>
+      </div>
+    </div>
+    {{/each}}
+    
+    <!-- Order Total -->
+    <div style="margin-top: 25px; padding-top: 25px; border-top: 2px solid #7c9885;">
+      <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+        <span style="color: #666; font-size: 16px;">Subtotal:</span>
+        <span style="color: #2c3e50; font-weight: 600; font-size: 16px;">€{{subtotal}}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+        <span style="color: #666; font-size: 16px;">Shipping:</span>
+        <span style="color: #2c3e50; font-weight: 600; font-size: 16px;">
+          {{#if free_shipping}}
+            <span style="color: #7c9885; font-weight: bold;">Free</span>
+          {{else}}
+            €{{shipping_cost}}
+          {{/if}}
+        </span>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin: 20px 0 0 0; padding-top: 15px; border-top: 1px solid #f0f0f0;">
+        <span style="color: #2c3e50; font-size: 20px; font-weight: bold;">Total:</span>
+        <span style="color: #7c9885; font-size: 24px; font-weight: bold;">€{{total}}</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Shipping Information -->
+  <div style="background-color: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <h2 style="color: #2c3e50; margin-bottom: 20px; font-size: 20px; font-weight: 500; display: flex; align-items: center;">
+      <span style="margin-right: 10px; font-size: 24px;">📦</span>
+      Shipping Details
+    </h2>
+    
+    <div style="background-color: #f8fffe; padding: 20px; border-radius: 8px; border-left: 4px solid #7c9885;">
+      <h4 style="margin: 0 0 15px 0; color: #2c3e50; font-weight: 600;">{{customer_name}}</h4>
+      <p style="margin: 5px 0; color: #666; line-height: 1.6;">
+        {{shipping_address}}<br>
+        {{shipping_city}}, {{shipping_postal}}<br>
+        {{shipping_country}}
+        {{#if shipping_phone}}<br>Phone: {{shipping_phone}}{{/if}}
+      </p>
+    </div>
+  </div>
+  
+  <!-- What Happens Next -->
+  <div style="background: linear-gradient(135deg, #fff8f0 0%, #fef7ed 100%); padding: 25px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #f4a261;">
+    <h2 style="color: #2c3e50; margin-bottom: 20px; font-size: 20px; font-weight: 500; display: flex; align-items: center;">
+      <span style="margin-right: 10px; font-size: 24px;">🎨</span>
+      What Happens Next?
+    </h2>
+    <div style="margin: 0; color: #666; line-height: 1.8;">
+      <div style="display: flex; align-items: center; margin: 15px 0;">
+        <span style="color: #f4a261; margin-right: 15px; font-size: 20px;">1️⃣</span>
+        <span>Your artwork will be carefully prepared and printed</span>
+      </div>
+      <div style="display: flex; align-items: center; margin: 15px 0;">
+        <span style="color: #f4a261; margin-right: 15px; font-size: 20px;">2️⃣</span>
+        <span>We'll send tracking information once shipped</span>
+      </div>
+      <div style="display: flex; align-items: center; margin: 15px 0;">
+        <span style="color: #f4a261; margin-right: 15px; font-size: 20px;">3️⃣</span>
+        <span>Expected delivery: 3-7 business days</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Call to Action -->
+  <div style="text-align: center; margin: 35px 0;">
+    <p style="color: #666; margin-bottom: 20px; font-size: 16px;">Track your order or view more artwork:</p>
+    <div style="margin: 20px 0;">
+      <a href="{{track_order_url}}" style="display: inline-block; background-color: #7c9885; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; margin: 0 10px 10px 0;">
+        📦 Track Order
+      </a>
+      <a href="{{shop_url}}" style="display: inline-block; background-color: white; color: #7c9885; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; border: 2px solid #7c9885; margin: 0 10px 10px 0;">
+        🎨 View More Art
+      </a>
+    </div>
+  </div>
+  
+  <!-- Social Media & Portfolio -->
+  <div style="background-color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <h3 style="color: #2c3e50; margin-bottom: 15px; font-size: 18px; font-weight: 500;">Share Your New Art!</h3>
+    <p style="color: #666; margin-bottom: 20px; font-size: 14px;">Tag us in your photos - we love seeing our art in your space!</p>
+    <div style="margin: 20px 0;">
+      <a href="https://instagram.com/burcinbar" style="display: inline-block; margin: 0 10px; color: #7c9885; text-decoration: none; font-weight: 500;">📷 Instagram</a>
+      <a href="https://etsy.com/shop/burcinbar" style="display: inline-block; margin: 0 10px; color: #7c9885; text-decoration: none; font-weight: 500;">🛍️ Etsy Shop</a>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <div style="text-align: center; margin-top: 40px; padding-top: 25px; border-top: 1px solid #e0e0e0;">
+    <div style="margin-bottom: 20px;">
+      <div style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background-color: #7c9885; border-radius: 50%; margin-bottom: 15px;">
+        <span style="color: white; font-weight: bold; font-size: 18px;">B</span>
+      </div>
+      <p style="margin: 0; color: #7c9885; font-weight: 600; font-size: 20px; letter-spacing: 1px;">Burcinbar</p>
+      <p style="margin: 5px 0 0 0; color: #666; font-size: 14px; font-style: italic;">Independent Artist • Handcrafted with Love</p>
+    </div>
+    
+    <p style="color: #999; font-size: 13px; margin: 15px 0; line-height: 1.6;">
+      This is an automated confirmation email. Please do not reply.<br>
+      Questions? Contact us at <a href="mailto:burcinbar@gmail.com" style="color: #7c9885; text-decoration: none;">burcinbar@gmail.com</a>
+    </p>
+    
+    <p style="color: #bbb; font-size: 11px; margin: 20px 0 0 0; line-height: 1.5;">
+      Unique art prints • Worldwide shipping • Supporting independent artists since 2024
+    </p>
+  </div>
+</body>
+</html>

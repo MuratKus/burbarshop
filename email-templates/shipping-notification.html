@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Order Has Shipped! - Burcinbar</title>
+</head>
+<body style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fafafa; color: #2c3e50;">
+  
+  <!-- Header with Shipping Theme -->
+  <div style="text-align: center; margin-bottom: 30px; padding: 30px; background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%); border-radius: 12px;">
+    <div style="display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; background-color: white; border-radius: 50%; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+      <span style="font-size: 28px;">📦</span>
+    </div>
+    <h1 style="color: white; margin: 0; font-size: 32px; font-weight: 300; letter-spacing: 1px;">Your Art is On Its Way!</h1>
+    <p style="color: rgba(255,255,255,0.9); margin: 15px 0 0 0; font-size: 18px; font-weight: 300;">Order #{{order_number}} has shipped ✈️</p>
+  </div>
+  
+  <!-- Tracking Information Card -->
+  <div style="background-color: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <h2 style="color: #2c3e50; margin-bottom: 25px; font-size: 24px; font-weight: 300; border-bottom: 2px solid #4338ca; padding-bottom: 10px;">Tracking Information</h2>
+    
+    <!-- Main Tracking CTA -->
+    <div style="background: linear-gradient(135deg, #ede9fe 0%, #e0e7ff 100%); padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 25px;">
+      <h3 style="margin: 0 0 15px 0; color: #2c3e50; font-size: 18px; font-weight: 600;">Tracking Number</h3>
+      <p style="margin: 0 0 20px 0; font-family: 'Courier New', monospace; font-size: 20px; font-weight: bold; color: #4338ca; letter-spacing: 2px;">{{tracking_number}}</p>
+      <a href="{{tracking_url}}" style="display: inline-block; background-color: #4338ca; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; margin-top: 10px;">
+        🔍 Track Your Package
+      </a>
+    </div>
+    
+    <!-- Shipping Details -->
+    <div style="background-color: #f8fffe; padding: 20px; border-radius: 8px; border-left: 4px solid #7c9885;">
+      <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+        <span style="color: #666; font-weight: 500;">Shipped Date:</span>
+        <span style="color: #2c3e50; font-weight: 600;">{{ship_date}}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+        <span style="color: #666; font-weight: 500;">Estimated Delivery:</span>
+        <span style="color: #7c9885; font-weight: 600;">{{estimated_delivery}}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+        <span style="color: #666; font-weight: 500;">Shipping Method:</span>
+        <span style="color: #2c3e50; font-weight: 600;">{{shipping_method}}</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Order Summary -->
+  <div style="background-color: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <h2 style="color: #2c3e50; margin-bottom: 20px; font-size: 20px; font-weight: 500;">What's in Your Package</h2>
+    
+    {{#each items}}
+    <div style="border-bottom: 1px solid #f0f0f0; padding: 15px 0; display: flex; justify-content: space-between; align-items: center;">
+      <div style="flex: 1;">
+        <h4 style="margin: 0 0 5px 0; font-weight: 600; color: #2c3e50; font-size: 16px;">{{title}}</h4>
+        <p style="margin: 0; color: #666; font-size: 14px;">{{size}} • Qty: {{quantity}}</p>
+      </div>
+      <div style="text-align: right;">
+        <p style="margin: 0; font-weight: 600; color: #7c9885; font-size: 16px;">€{{item_total}}</p>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  
+  <!-- Shipping Address -->
+  <div style="background-color: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <h2 style="color: #2c3e50; margin-bottom: 20px; font-size: 20px; font-weight: 500; display: flex; align-items: center;">
+      <span style="margin-right: 10px; font-size: 24px;">🏠</span>
+      Shipping To
+    </h2>
+    
+    <div style="background-color: #f8fffe; padding: 20px; border-radius: 8px; border-left: 4px solid #7c9885;">
+      <h4 style="margin: 0 0 10px 0; color: #2c3e50; font-weight: 600;">{{customer_name}}</h4>
+      <p style="margin: 5px 0; color: #666; line-height: 1.6;">
+        {{shipping_address}}<br>
+        {{shipping_city}}, {{shipping_postal}}<br>
+        {{shipping_country}}
+      </p>
+    </div>
+  </div>
+  
+  <!-- Care Instructions -->
+  <div style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); padding: 25px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #22c55e;">
+    <h2 style="color: #2c3e50; margin-bottom: 20px; font-size: 20px; font-weight: 500; display: flex; align-items: center;">
+      <span style="margin-right: 10px; font-size: 24px;">🎨</span>
+      Caring for Your Art
+    </h2>
+    <div style="color: #666; line-height: 1.8;">
+      <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+        <span style="color: #22c55e; margin-right: 15px; font-size: 18px; margin-top: 2px;">✨</span>
+        <span>Handle with clean, dry hands to preserve the quality</span>
+      </div>
+      <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+        <span style="color: #22c55e; margin-right: 15px; font-size: 18px; margin-top: 2px;">🖼️</span>
+        <span>Frame immediately to protect from dust and UV light</span>
+      </div>
+      <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+        <span style="color: #22c55e; margin-right: 15px; font-size: 18px; margin-top: 2px;">🏠</span>
+        <span>Display away from direct sunlight for best preservation</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Social Sharing -->
+  <div style="background-color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <h3 style="color: #2c3e50; margin-bottom: 15px; font-size: 18px; font-weight: 500;">We Can't Wait to See It!</h3>
+    <p style="color: #666; margin-bottom: 20px; font-size: 14px;">Share your unboxing and new artwork with us!</p>
+    <div style="margin: 20px 0;">
+      <a href="https://instagram.com/burcinbar" style="display: inline-block; margin: 0 10px; color: #4338ca; text-decoration: none; font-weight: 500;">📷 @burcinbar</a>
+      <span style="color: #666; margin: 0 5px;">•</span>
+      <span style="color: #666; font-size: 14px;">#burcinbarart</span>
+    </div>
+  </div>
+  
+  <!-- Support -->
+  <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin-bottom: 25px; text-align: center;">
+    <h3 style="color: #2c3e50; margin-bottom: 10px; font-size: 16px; font-weight: 600;">Need Help?</h3>
+    <p style="color: #666; margin: 0; font-size: 14px; line-height: 1.6;">
+      Questions about your order or delivery? <br>
+      <a href="mailto:burcinbar@gmail.com" style="color: #7c9885; text-decoration: none; font-weight: 600;">Contact us</a> and we'll help right away!
+    </p>
+  </div>
+  
+  <!-- Footer -->
+  <div style="text-align: center; margin-top: 40px; padding-top: 25px; border-top: 1px solid #e0e0e0;">
+    <div style="margin-bottom: 20px;">
+      <div style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background-color: #7c9885; border-radius: 50%; margin-bottom: 15px;">
+        <span style="color: white; font-weight: bold; font-size: 18px;">B</span>
+      </div>
+      <p style="margin: 0; color: #7c9885; font-weight: 600; font-size: 20px; letter-spacing: 1px;">Burcinbar</p>
+      <p style="margin: 5px 0 0 0; color: #666; font-size: 14px; font-style: italic;">Thank you for supporting independent art!</p>
+    </div>
+    
+    <p style="color: #999; font-size: 13px; margin: 15px 0; line-height: 1.6;">
+      This is an automated shipping notification. Please do not reply.<br>
+      Questions? Contact us at <a href="mailto:burcinbar@gmail.com" style="color: #7c9885; text-decoration: none;">burcinbar@gmail.com</a>
+    </p>
+  </div>
+</body>
+</html>
