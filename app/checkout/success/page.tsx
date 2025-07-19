@@ -18,6 +18,8 @@ function CheckoutSuccessContent() {
   const [orderDetails, setOrderDetails] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [cartCleared, setCartCleared] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [fetchAttempted, setFetchAttempted] = useState(false)
 
   useEffect(() => {
     // Clear cart if coming from successful checkout (only once)
@@ -26,22 +28,32 @@ function CheckoutSuccessContent() {
       setCartCleared(true)
     }
     
-    if (orderId) {
+    // Only attempt to fetch order details once
+    if (orderId && !fetchAttempted) {
+      setFetchAttempted(true)
       fetchOrderDetails()
-    } else {
+    } else if (!orderId) {
       setLoading(false)
     }
-  }, [orderId, shouldClearCart, cartCleared]) // Fixed dependency array
+  }, [orderId, shouldClearCart, cartCleared, fetchAttempted]) // Include fetchAttempted to prevent infinite loops
 
   const fetchOrderDetails = async () => {
     try {
+      console.log('Fetching order details for ID:', orderId)
       const response = await fetch(`/api/orders/${orderId}`)
+      
       if (response.ok) {
         const data = await response.json()
         setOrderDetails(data)
+        setError(null)
+      } else {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        console.error('API error response:', response.status, errorData)
+        setError(`Failed to load order details: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
-      console.error('Error fetching order details:', error)
+      console.error('Network error fetching order details:', error)
+      setError('Unable to connect to server. Please check your internet connection and try again.')
     } finally {
       setLoading(false)
     }
@@ -66,6 +78,46 @@ function CheckoutSuccessContent() {
             </div>
           </Container>
         </Section>
+      </main>
+    )
+  }
+
+  // Show error state if there's an error and no order details
+  if (error && !orderDetails) {
+    return (
+      <main className="public-layout">
+        <Header />
+        <Section>
+          <Container>
+            <div className="max-w-2xl mx-auto">
+              <div className="bg-white rounded-xl shadow-elegant p-8 text-center border border-red-200">
+                <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+                <h1 className="text-2xl font-bold text-red-600 mb-3">Unable to Load Order Details</h1>
+                <p className="text-neutral-gray mb-6">{error}</p>
+                <div className="space-y-3">
+                  <Button 
+                    onClick={() => {
+                      setError(null)
+                      setFetchAttempted(false)
+                      setLoading(true)
+                    }} 
+                    className="w-full"
+                  >
+                    Try Again
+                  </Button>
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link href="/shop">Continue Shopping</Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Container>
+        </Section>
+        <Footer />
       </main>
     )
   }
