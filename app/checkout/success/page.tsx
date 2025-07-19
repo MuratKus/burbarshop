@@ -15,11 +15,13 @@ function CheckoutSuccessContent() {
   const shouldClearCart = searchParams?.get('clear_cart')
   const [orderDetails, setOrderDetails] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [cartCleared, setCartCleared] = useState(false)
 
   useEffect(() => {
-    // Clear cart if coming from successful checkout
-    if (shouldClearCart === 'true') {
+    // Clear cart if coming from successful checkout (only once)
+    if (shouldClearCart === 'true' && !cartCleared) {
       clearCart()
+      setCartCleared(true)
     }
     
     if (orderId) {
@@ -27,7 +29,7 @@ function CheckoutSuccessContent() {
     } else {
       setLoading(false)
     }
-  }, [orderId, shouldClearCart, clearCart])
+  }, [orderId, shouldClearCart, cartCleared]) // Fixed dependency array
 
   const fetchOrderDetails = async () => {
     try {
