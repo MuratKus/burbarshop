@@ -2,12 +2,12 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 function MockPaymentContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const sessionId = searchParams.get('session_id')
+  const sessionId = searchParams?.get('session_id')
 
   const [orderData, setOrderData] = useState<any>(null)
   const [loading, setLoading] = useState(true)

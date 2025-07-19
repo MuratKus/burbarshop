@@ -10,9 +10,9 @@ import { useCart } from '@/components/CartProvider'
 function CheckoutSuccessContent() {
   const searchParams = useSearchParams()
   const { clearCart } = useCart()
-  const orderId = searchParams.get('order_id')
-  const paymentIntentId = searchParams.get('payment_intent')
-  const shouldClearCart = searchParams.get('clear_cart')
+  const orderId = searchParams?.get('order_id')
+  const paymentIntentId = searchParams?.get('payment_intent')
+  const shouldClearCart = searchParams?.get('clear_cart')
   const [orderDetails, setOrderDetails] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 

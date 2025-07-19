@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { Navigation } from '@/components/Navigation'
 
 export default function CheckoutCancelPage() {
@@ -31,11 +31,11 @@ export default function CheckoutCancelPage() {
             </div>
             
             <div className="space-y-4">
-              <Button asChild className="w-full" size="lg">
+              <Button className="w-full" size="lg">
                 <Link href="/cart">Return to Cart</Link>
               </Button>
               
-              <Button variant="outline" asChild className="w-full">
+              <Button variant="outline" className="w-full">
                 <Link href="/shop">Continue Shopping</Link>
               </Button>
             </div>
