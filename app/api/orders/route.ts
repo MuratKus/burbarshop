@@ -142,7 +142,7 @@ export async function POST(request: Request) {
       const emailHtml = generateOrderConfirmationEmail(order)
       await sendEmail({
         to: order.email,
-        subject: `Order Confirmation #${order.id.slice(-8).toUpperCase()} - Burcinbar Art`,
+        subject: `Order Confirmation #${order.id.slice(-8).toUpperCase()} - Burcinbar`,
         html: emailHtml
       })
       console.log('✅ Order confirmation email sent to:', order.email)

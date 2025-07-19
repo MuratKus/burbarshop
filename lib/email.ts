@@ -59,7 +59,7 @@ export function generateOrderConfirmationEmail(order: any): string {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Order Confirmation - Burcinbar Art</title>
+      <title>Order Confirmation - Burcinbar</title>
     </head>
     <body style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fafafa; color: #2c3e50;">
       <!-- Header -->
@@ -137,7 +137,7 @@ export function generateOrderConfirmationEmail(order: any): string {
       <!-- Call to Action -->
       <div style="text-align: center; margin: 30px 0;">
         <p style="color: #666; margin-bottom: 15px; font-size: 16px;">Track your order status:</p>
-        <a href="${process.env.NEXTAUTH_URL || 'https://burbarshop.com'}/orders/${order.id}" 
+        <a href="${process.env.NEXTAUTH_URL || 'https://burcinbarbaros.com'}/orders/${order.id}" 
            style="display: inline-block; background-color: #7c9885; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
           📦 View Order Status
         </a>
@@ -153,7 +153,7 @@ export function generateOrderConfirmationEmail(order: any): string {
         </div>
         <p style="color: #999; font-size: 13px; margin: 10px 0;">
           This is an automated confirmation email. Please do not reply.<br>
-          Questions? Contact us at <a href="mailto:hello@burbarshop.com" style="color: #7c9885;">hello@burbarshop.com</a>
+          Questions? Contact us at <a href="mailto:burcinbar@gmail.com" style="color: #7c9885;">burcinbar@gmail.com</a>
         </p>
         <p style="color: #bbb; font-size: 11px; margin: 15px 0 0 0;">
           Unique art prints crafted with love • Independent artist • Worldwide shipping
