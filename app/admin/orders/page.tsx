@@ -379,7 +379,6 @@ export default function OrdersPage() {
           <p className="text-gray-500">No orders yet. Orders will appear here when customers make purchases.</p>
         </div>
       )}
-      </div>
 
       <TrackingModal
         isOpen={trackingModal.isOpen}
