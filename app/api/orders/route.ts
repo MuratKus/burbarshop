@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkInventoryAvailability, reserveInventory, type InventoryItem } from '@/lib/inventory'
+import { sendEmail, generateOrderConfirmationEmail } from '@/lib/email'
 
 export async function GET(request: NextRequest) {
   try {
@@ -135,6 +136,21 @@ export async function POST(request: Request) {
     })
 
     console.log('Order created successfully with inventory reserved:', order.id)
+    
+    // Send order confirmation email
+    try {
+      const emailHtml = generateOrderConfirmationEmail(order)
+      await sendEmail({
+        to: order.email,
+        subject: `Order Confirmation #${order.id.slice(-8).toUpperCase()} - Burcinbar Art`,
+        html: emailHtml
+      })
+      console.log('✅ Order confirmation email sent to:', order.email)
+    } catch (emailError) {
+      console.error('❌ Failed to send order confirmation email:', emailError)
+      // Don't fail the order creation if email fails
+    }
+    
     return NextResponse.json(order)
   } catch (error) {
     console.error('Error creating order:', error)
