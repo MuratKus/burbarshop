@@ -28,12 +28,12 @@ interface Order {
 
 function getStatusColor(status: string) {
   switch (status) {
-    case 'PENDING': return 'bg-yellow-100 text-yellow-800'
-    case 'PROCESSING': return 'bg-blue-100 text-blue-800'
-    case 'SHIPPED': return 'bg-purple-100 text-purple-800'
-    case 'DELIVERED': return 'bg-green-100 text-green-800'
-    case 'CANCELLED': return 'bg-red-100 text-red-800'
-    default: return 'bg-gray-100 text-gray-800'
+    case 'PENDING': return 'bg-accent-coral/20 text-accent-coral border-accent-coral/30'
+    case 'PROCESSING': return 'bg-primary-sage/20 text-primary-sage border-primary-sage/30'
+    case 'SHIPPED': return 'bg-blue-100 text-blue-800 border-blue-200'
+    case 'DELIVERED': return 'bg-green-100 text-green-800 border-green-200'
+    case 'CANCELLED': return 'bg-red-100 text-red-800 border-red-200'
+    default: return 'bg-neutral-gray/20 text-neutral-gray border-neutral-gray/30'
   }
 }
 
@@ -162,7 +162,97 @@ export default function OrdersPage() {
         <p className="text-gray-600 mt-2">Manage customer orders and fulfillment</p>
       </div>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
+      {/* Mobile View - Cards */}
+      <div className="lg:hidden space-y-4">
+        {orders.map((order) => (
+          <div key={order.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  #{order.id.slice(-8).toUpperCase()}
+                </h3>
+                <p className="text-sm text-gray-600">{new Date(order.createdAt).toLocaleDateString()}</p>
+              </div>
+              <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getStatusColor(order.status)}`}>
+                {order.status}
+              </span>
+            </div>
+            
+            <div className="space-y-3">
+              <div>
+                <p className="text-sm font-medium text-gray-700">Customer</p>
+                <p className="text-sm text-gray-900">{order.email}</p>
+                {order.user?.name && (
+                  <p className="text-sm text-gray-500">{order.user.name}</p>
+                )}
+              </div>
+              
+              <div>
+                <p className="text-sm font-medium text-gray-700">Items ({order.items.length})</p>
+                <div className="text-sm text-gray-600">
+                  {order.items.slice(0, 2).map((item, idx) => (
+                    <div key={idx}>
+                      {item.quantity}x {item.product.title} ({item.productVariant.size})
+                    </div>
+                  ))}
+                  {order.items.length > 2 && (
+                    <div>... and {order.items.length - 2} more</div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Total</p>
+                  <p className="text-lg font-bold text-gray-900">€{order.total.toFixed(2)}</p>
+                  <p className="text-xs text-gray-500">Shipping: €{order.shippingCost.toFixed(2)}</p>
+                </div>
+                
+                {order.trackingNumber && (
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-gray-700">Tracking</p>
+                    <p className="text-sm font-medium text-gray-900">#{order.trackingNumber}</p>
+                    {order.trackingUrl && (
+                      <a 
+                        href={order.trackingUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 text-sm"
+                      >
+                        🔗 Track Package
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+              
+              <div className="pt-3 border-t border-gray-200">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Update Status</label>
+                <select 
+                  value={order.status}
+                  disabled={updatingStatus === order.id}
+                  className={`w-full text-sm border border-gray-300 rounded-lg px-3 py-2 text-gray-900 ${
+                    updatingStatus === order.id ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  onChange={(e) => updateOrderStatus(order.id, e.target.value)}
+                >
+                  <option value="PENDING">Pending</option>
+                  <option value="PROCESSING">Processing</option>
+                  <option value="SHIPPED">Shipped</option>
+                  <option value="DELIVERED">Delivered</option>
+                  <option value="CANCELLED">Cancelled</option>
+                </select>
+                {updatingStatus === order.id && (
+                  <p className="text-xs text-blue-600 mt-1">Updating...</p>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop View - Table */}
+      <div className="hidden lg:block bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -230,7 +320,7 @@ export default function OrdersPage() {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
+                  <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getStatusColor(order.status)}`}>
                     {order.status}
                   </span>
                 </td>
@@ -262,7 +352,7 @@ export default function OrdersPage() {
                   <select 
                     value={order.status}
                     disabled={updatingStatus === order.id}
-                    className={`text-sm border border-gray-300 rounded px-2 py-1 text-gray-900 ${
+                    className={`text-sm border border-gray-300 rounded-lg px-3 py-1 text-gray-900 ${
                       updatingStatus === order.id ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                     onChange={(e) => updateOrderStatus(order.id, e.target.value)}
@@ -281,13 +371,14 @@ export default function OrdersPage() {
             ))}
           </tbody>
         </table>
-        
-        {orders.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 text-lg mb-4">📋</div>
-            <p className="text-gray-500">No orders yet. Orders will appear here when customers make purchases.</p>
-          </div>
-        )}
+      </div>
+      
+      {orders.length === 0 && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 text-center py-12">
+          <div className="text-gray-400 text-lg mb-4">📋</div>
+          <p className="text-gray-500">No orders yet. Orders will appear here when customers make purchases.</p>
+        </div>
+      )}
       </div>
 
       <TrackingModal

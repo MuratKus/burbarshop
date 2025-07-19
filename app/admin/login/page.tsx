@@ -21,15 +21,21 @@ export default function AdminLoginPage() {
         body: JSON.stringify(credentials)
       })
 
-      if (response.ok) {
-        // Set admin session cookie and redirect
-        document.cookie = 'admin-session=authenticated; path=/; max-age=86400' // 24 hours
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        // Cookie is set by the API, just redirect
+        console.log('Login successful, redirecting to admin...')
         router.push('/admin')
+        // Force a page refresh to ensure the session is properly recognized
+        setTimeout(() => {
+          window.location.href = '/admin'
+        }, 100)
       } else {
-        const data = await response.json()
         setError(data.message || 'Invalid credentials')
       }
     } catch (error) {
+      console.error('Login error:', error)
       setError('Login failed. Please try again.')
     } finally {
       setLoading(false)
