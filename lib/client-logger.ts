@@ -21,8 +21,12 @@ interface LogEvent {
 class ClientLogger {
   private logs: LogEvent[] = []
   private maxLogs = 100
+  private isClient = typeof window !== 'undefined'
 
   constructor() {
+    // Only set up client-side monitoring if we're in the browser
+    if (!this.isClient) return
+    
     // Capture unhandled errors
     window.addEventListener('error', (event) => {
       this.error('Unhandled Error', {
@@ -51,14 +55,16 @@ class ClientLogger {
       level,
       message,
       timestamp: Date.now(),
-      url: window.location.href,
-      userAgent: navigator.userAgent,
-      performance: this.getPerformanceData(),
+      url: this.isClient ? window.location.href : 'server',
+      userAgent: this.isClient ? navigator.userAgent : 'server',
+      performance: this.isClient ? this.getPerformanceData() : undefined,
       ...extra
     }
   }
 
   private getPerformanceData() {
+    if (!this.isClient) return undefined
+    
     const data: any = {}
     
     // Memory usage (if available)
@@ -79,6 +85,8 @@ class ClientLogger {
   }
 
   private monitorPerformance() {
+    if (!this.isClient) return
+    
     // Monitor long tasks (if supported)
     if ('PerformanceObserver' in window) {
       try {
@@ -140,7 +148,7 @@ class ClientLogger {
     this.addLog(log)
     
     // Send critical errors to server if needed
-    if (typeof window !== 'undefined') {
+    if (this.isClient) {
       fetch('/api/client-errors', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -195,6 +203,11 @@ class ClientLogger {
 
   // Export logs for analysis
   exportLogs() {
+    if (!this.isClient) {
+      console.log('Export logs not available on server')
+      return
+    }
+    
     const dataStr = JSON.stringify(this.logs, null, 2)
     const dataBlob = new Blob([dataStr], { type: 'application/json' })
     const url = URL.createObjectURL(dataBlob)
