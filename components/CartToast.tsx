@@ -42,33 +42,33 @@ export function CartToast({ isOpen, onClose, productName, productColor, productS
     <>
       {/* Toast positioned top-right, no backdrop */}
       <div 
-        className={`fixed top-4 right-4 z-50 w-[400px] max-w-[90vw] bg-white rounded-lg shadow-2xl border border-gray-200 transition-all duration-300 ${
+        className={`fixed top-4 right-4 z-50 w-[320px] max-w-[85vw] sm:w-[360px] sm:max-w-[90vw] bg-white rounded-lg shadow-xl border border-gray-200 transition-all duration-300 ${
           isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-sm font-semibold text-gray-600 tracking-wide uppercase">
-            Just Added to Your Cart
+        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-100">
+          <h2 className="text-xs sm:text-sm font-semibold text-gray-600 tracking-wide uppercase">
+            Added to Cart
           </h2>
           <button
             onClick={handleClose}
             className="text-gray-400 hover:text-gray-600 transition-colors p-1"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
 
         {/* Product Details */}
-        <div className="p-6 space-y-4">
+        <div className="p-3 sm:p-4 space-y-3">
           <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="text-lg font-medium text-teal-600 mb-2">
+            <div className="flex-1 pr-2">
+              <h3 className="text-sm sm:text-base font-medium text-teal-600 mb-1 sm:mb-2 line-clamp-2">
                 {productName}
               </h3>
               
               {/* Product Attributes */}
-              <div className="space-y-1 text-sm text-gray-600">
+              <div className="space-y-0.5 text-xs sm:text-sm text-gray-600">
                 {productColor && (
                   <p>Color: {productColor}</p>
                 )}
@@ -78,25 +78,25 @@ export function CartToast({ isOpen, onClose, productName, productColor, productS
               </div>
             </div>
             
-            <div className="text-right">
-              <p className="text-sm text-gray-600">Qty: {quantity}</p>
+            <div className="text-right flex-shrink-0">
+              <p className="text-xs sm:text-sm text-gray-600">Qty: {quantity}</p>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="space-y-3 pt-4">
+          <div className="space-y-2 pt-2">
             <Link
               href="/cart"
               onClick={handleClose}
-              className="w-full bg-white border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-white border border-gray-300 text-gray-700 font-medium py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 text-sm"
             >
-              <ShoppingCart className="w-4 h-4" />
+              <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
               View Cart ({cartItemCount})
             </Link>
             
             <button
               onClick={handleClose}
-              className="w-full text-gray-600 hover:text-gray-800 transition-colors py-2 text-sm font-medium underline"
+              className="w-full text-gray-600 hover:text-gray-800 transition-colors py-1.5 text-xs sm:text-sm font-medium underline"
             >
               Continue shopping
             </button>
