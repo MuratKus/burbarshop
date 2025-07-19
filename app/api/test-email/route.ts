@@ -18,9 +18,15 @@ export async function POST() {
       message: result ? 'Email sent successfully' : 'Email sending failed'
     })
   } catch (error) {
+    console.error('Test email error:', error)
     return NextResponse.json({ 
       success: false, 
-      error: error.message 
+      error: error instanceof Error ? error.message : 'Unknown error',
+      details: {
+        hasApiKey: !!process.env.SENDGRID_API_KEY,
+        hasEmailFrom: !!process.env.EMAIL_FROM,
+        apiKeyStart: process.env.SENDGRID_API_KEY?.substring(0, 10) + '...'
+      }
     }, { status: 500 })
   }
 }
