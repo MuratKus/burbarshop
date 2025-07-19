@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const ADMIN_CREDENTIALS = {
   username: 'admin',
-  password: 'password' // In production, this should be hashed and stored securely
+  password: process.env.ADMIN_PASSWORD || 'defaultpassword'
 }
 
 export async function POST(request: NextRequest) {
