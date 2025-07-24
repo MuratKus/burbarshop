@@ -132,6 +132,105 @@ export async function sendNewsletterEmail(
   }
 }
 
+// Send admin notification email when new order is created
+export async function sendAdminOrderNotification(order: any): Promise<boolean> {
+  try {
+    const shippingAddress = JSON.parse(order.shippingAddress)
+    const adminEmail = process.env.ADMIN_EMAIL || 'me@murat-kus.com'
+    
+    const orderItemsList = order.items.map((item: any) => 
+      `• ${item.quantity}x ${item.product.title} (${item.productVariant.size}) - €${(item.quantity * item.price).toFixed(2)}`
+    ).join('\n')
+    
+    const emailHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>🚨 New Order Alert - ${order.id.slice(-8).toUpperCase()}</title>
+      </head>
+      <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
+        
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 25px;">
+          <h1 style="color: white; margin: 0; font-size: 24px;">🚨 NEW ORDER ALERT</h1>
+          <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">Time to create some art!</p>
+        </div>
+        
+        <!-- Order Info -->
+        <div style="background-color: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <h2 style="color: #2c3e50; margin-bottom: 20px; font-size: 20px;">Order Details</h2>
+          
+          <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; border-left: 4px solid #f59e0b; margin-bottom: 20px;">
+            <p style="margin: 5px 0; color: #2c3e50;"><strong>Order ID:</strong> #${order.id.slice(-8).toUpperCase()}</p>
+            <p style="margin: 5px 0; color: #2c3e50;"><strong>Total:</strong> €${order.total.toFixed(2)}</p>
+            <p style="margin: 5px 0; color: #2c3e50;"><strong>Payment:</strong> ${order.paymentMethod.toUpperCase()}</p>
+            <p style="margin: 5px 0; color: #2c3e50;"><strong>Time:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
+          </div>
+          
+          <h3 style="color: #2c3e50; margin: 20px 0 10px 0;">🎨 Items to Prepare:</h3>
+          <div style="background-color: #f8fffe; padding: 15px; border-radius: 8px; border-left: 4px solid #7c9885;">
+            ${order.items.map((item: any) => `
+              <div style="margin: 10px 0; padding: 10px; background-color: white; border-radius: 6px;">
+                <p style="margin: 0; font-weight: 600; color: #2c3e50;">${item.quantity}x ${item.product.title}</p>
+                <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Size: ${item.productVariant.size} • €${(item.quantity * item.price).toFixed(2)}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <!-- Customer Info -->
+        <div style="background-color: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <h2 style="color: #2c3e50; margin-bottom: 15px; font-size: 20px;">📦 Ship To:</h2>
+          <div style="background-color: #f0f9ff; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+            <p style="margin: 5px 0; color: #2c3e50; font-weight: 600;">${shippingAddress.firstName} ${shippingAddress.lastName}</p>
+            <p style="margin: 5px 0; color: #666;">${shippingAddress.address}</p>
+            <p style="margin: 5px 0; color: #666;">${shippingAddress.city}, ${shippingAddress.postalCode}</p>
+            <p style="margin: 5px 0; color: #666;">${shippingAddress.country}</p>
+            <p style="margin: 5px 0; color: #666;"><strong>Email:</strong> ${order.email}</p>
+            ${shippingAddress.phone ? `<p style="margin: 5px 0; color: #666;"><strong>Phone:</strong> ${shippingAddress.phone}</p>` : ''}
+          </div>
+        </div>
+        
+        <!-- Action Required -->
+        <div style="background: linear-gradient(135deg, #7c9885 0%, #6b8473 100%); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px;">
+          <h3 style="color: white; margin: 0 0 10px 0;">🎯 Next Steps:</h3>
+          <p style="color: rgba(255,255,255,0.9); margin: 0; line-height: 1.6;">
+            1. Prepare the artwork<br>
+            2. Update order status in admin panel<br>
+            3. Add tracking info when shipped
+          </p>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div style="text-align: center; margin: 25px 0;">
+          <a href="${process.env.NEXTAUTH_URL || 'https://burbarshop.com'}/admin/orders" 
+             style="display: inline-block; background-color: #dc2626; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; margin: 5px;">
+            🏃‍♀️ Go to Orders
+          </a>
+        </div>
+        
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+          <p style="color: #666; font-size: 12px; margin: 0;">
+            Burcinbar Admin Notification • Order ID: #${order.id.slice(-8).toUpperCase()}
+          </p>
+        </div>
+      </body>
+      </html>
+    `
+    
+    return await sendEmail({
+      to: adminEmail,
+      subject: `🚨 New Order #${order.id.slice(-8).toUpperCase()} - €${order.total.toFixed(2)}`,
+      html: emailHtml
+    })
+  } catch (error) {
+    console.error('❌ Admin notification email error:', error)
+    return false
+  }
+}
+
 // Legacy function for backward compatibility
 export function generateOrderConfirmationEmail(order: any): string {
   const shippingAddress = JSON.parse(order.shippingAddress)
