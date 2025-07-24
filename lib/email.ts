@@ -85,8 +85,8 @@ export async function sendOrderConfirmationEmail(order: any): Promise<boolean> {
       shipping_cost: order.shippingCost.toFixed(2),
       free_shipping: order.shippingCost === 0,
       total: order.total.toFixed(2),
-      track_order_url: `${process.env.NEXTAUTH_URL || 'https://burbarshop.com'}/orders/${order.id}`,
-      shop_url: `${process.env.NEXTAUTH_URL || 'https://burbarshop.com'}/shop`
+      track_order_url: `${process.env.NEXTAUTH_URL || 'https://burcinbarbaros.com'}/orders/${order.id}`,
+      shop_url: `${process.env.NEXTAUTH_URL || 'https://burcinbarbaros.com'}/shop`
     }
     
     return await sendEmail({
@@ -116,9 +116,9 @@ export async function sendNewsletterEmail(
   try {
     const templateData = {
       ...newsletterData,
-      website_url: process.env.NEXTAUTH_URL || 'https://burbarshop.com',
-      unsubscribe_url: `${process.env.NEXTAUTH_URL || 'https://burbarshop.com'}/unsubscribe`,
-      preferences_url: `${process.env.NEXTAUTH_URL || 'https://burbarshop.com'}/email-preferences`
+      website_url: process.env.NEXTAUTH_URL || 'https://burcinbarbaros.com',
+      unsubscribe_url: `${process.env.NEXTAUTH_URL || 'https://burcinbarbaros.com'}/unsubscribe`,
+      preferences_url: `${process.env.NEXTAUTH_URL || 'https://burcinbarbaros.com'}/email-preferences`
     }
     
     return await sendEmail({
@@ -204,7 +204,7 @@ export async function sendAdminOrderNotification(order: any): Promise<boolean> {
         
         <!-- Quick Actions -->
         <div style="text-align: center; margin: 25px 0;">
-          <a href="${process.env.NEXTAUTH_URL || 'https://burbarshop.com'}/admin/orders" 
+          <a href="${process.env.NEXTAUTH_URL || 'https://burcinbarbaros.com'}/admin/orders" 
              style="display: inline-block; background-color: #dc2626; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; margin: 5px;">
             🏃‍♀️ Go to Orders
           </a>
